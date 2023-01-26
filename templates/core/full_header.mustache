@@ -48,6 +48,38 @@
                       stacked layout class to it.
 }}
 <header id="page-header" class="header-maxwidth d-print-none">
+
+    {{! Begin DBN Update }}
+    <div class="headerbuttons">
+        {{#showenrollinktoteacher}}
+        <div class="enrollbtn"> 
+            <a href="{{{easycodelink}}}" title="{{{courseenrollmentcode}}}" class="btn btn-secondary headerbutton easyenrolbtn" style="float:right;"><i class="fa fa-1x fa-key" aria-hidden="true"></i><span class="sr-only">{{{courseenrollmentcode}}}</span></a>
+        </div>
+        {{/showenrollinktoteacher}}
+
+        {{#hascourseactivities}}
+        <div class="courseactivites">
+            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="tooltip" data-placement= "right" title="{{{courseactivitiesbtntext}}}" class="btn btn-secondary headerbutton courseactivities" style="float:right;"><i class="fa-1x fa fa-list-alt courseactivities"></i></a>
+            <div class="dropdown-menu dropdown-menu-right iconsidebar">
+                <h5>{{{courseactivitiesbtntext}}}</h5>
+                {{{courseactivitiesmenu}}}
+            </div>
+        </div>
+        {{/hascourseactivities}}
+
+        {{#hasmycourses}}
+        <div class="mycourses">
+            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="tooltip" data-placement= "right" title="{{{mycourses}}}" class="btn btn-secondary headerbutton mycourses" style="float:right;"><i class="fa-1x fa fa-history mycourses"></i></a>
+            <div class="dropdown-menu dropdown-menu-right iconsidebar">
+                <h5>{{{mycourses}}}</h5>
+                {{{mycoursesmenu}}}
+            </div>
+        </div>
+        {{/hasmycourses}}
+
+    </div>
+    {{! End DBN Update }}
+
     <div class="w-100">
         <div class="d-flex flex-wrap">
             {{#hasnavbar}}
@@ -129,4 +161,11 @@
             {{/courseheaderimageurl}}
         {{/welcomemessage}}
     </div>
+
+    {{! Begin DBN Update }}
+    {{{ courseprogressbar }}}
+    {{{ enrolform }}}
+    {{{ fpicons }}}
+    {{! End DBN Update }}
+    
 </header>

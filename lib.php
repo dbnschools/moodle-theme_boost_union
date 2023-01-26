@@ -102,6 +102,25 @@ function theme_boost_union_get_main_scss_content($theme) {
         // Safety fallback - maybe new installs etc.
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/preset/default.scss');
     }
+
+    // Begin DBN Update.
+    if ($theme->settings->sectionstyle == 1) {
+        $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/sections/sections-boost_union.scss');
+    }
+
+    if ($theme->settings->sectionstyle == 2) {
+        $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/sections/sections-boxed.scss');
+    }
+
+    if ($theme->settings->sectionstyle == 3) {
+        $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/sections/sections-boost.scss');
+    }
+
+    if ($theme->settings->sectionstyle == 4) {
+        $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/sections/sections-bars.scss');
+    }
+    // End DBN Update.
+    
     $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/boost_union/post.scss');
 
     return $scss;
@@ -132,6 +151,16 @@ function theme_boost_union_get_pre_scss($theme) {
         'bootstrapcolorinfo' => ['info'],
         'bootstrapcolorwarning' => ['warning'],
         'bootstrapcolordanger' => ['danger'],
+        // Begin DBN Update.
+        'navbarbg' => ['navbar-bg'],
+        'navbarlink' => ['navbar-link'],
+        'navbarlinkhover' => ['navbar-link-hover'],
+        'navbarsitetitlecolor' => ['navbarsitetitlecolor'],
+        'drawerbg' => ['drawer-bg'],
+        'bodybg' => ['body-bg'],
+        'courseheaderbg' => ['courseheaderbg'],
+        'pagenavbuttonsbg' => ['pagenavbuttonsbg'],
+        // End DBN Update.
     ];
 
     // Prepend variables first.

@@ -25,6 +25,12 @@
 namespace theme_boost_union\output;
 use context_system;
 use moodle_url;
+//Begin DBN Update
+use html_writer;
+use custom_menu;
+use stdClass;
+use context_course;
+//End DBN Update
 
 /**
  * Extending the core_renderer interface.
@@ -291,6 +297,48 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * @return string HTML to display the main header.
      */
     public function full_header() {
+        //Begin DBN Update
+        global $DB, $OUTPUT, $COURSE;
+        $mycourses = get_string('latestcourses', 'theme_boost_union');
+        $mycoursesurl = new moodle_url('/my/');
+        $mycoursesmenu = $this->boost_union_mycourses();
+        $hasmycourses = $this->page->pagelayout == 'course' && (isset($this->page->theme->settings->showlatestcourses) && $this->page->theme->settings->showlatestcourses == 1);
+        $hascourseactivities = $this->page->pagelayout == 'course' && (isset($this->page->theme->settings->showcourseactivities) && $this->page->theme->settings->showcourseactivities == 1);
+        $courseactivitiesbtntext = get_string('courseactivitiesbtntext', 'theme_boost_union');
+        $courseenrollmentcode = get_string('courseenrollmentcode', 'theme_boost_union');
+        $fpicons = $this->fpicons();
+        $enrolform = $this->enrolform();
+        $courseprogressbar = $this->courseprogressbar();
+        
+        $globalhaseasyenrollment = enrol_get_plugin('easy');
+        $coursehaseasyenrollment = '';
+        if ($globalhaseasyenrollment) {
+            $coursehaseasyenrollment = $DB->record_exists('enrol', array(
+                'courseid' => $this->page->course->id,
+                'enrol' => 'easy'
+            ));
+            $easyenrollinstance = $DB->get_record('enrol', array(
+                'courseid' => $this->page->course->id,
+                'enrol' => 'easy'
+            ));
+        }
+        $easycodetitle = '';
+        $easycodelink = '';
+        if ($globalhaseasyenrollment && $this->page->pagelayout == 'course' && $coursehaseasyenrollment){
+        $easycodetitle = get_string('header_coursecodes', 'enrol_easy');
+        $easycodelink = new moodle_url('/enrol/editinstance.php', array(
+                'courseid' => $this->page->course->id,
+                'id' => $easyenrollinstance->id,
+                'type' => 'easy'
+            ));
+        }
+        $easyenrolbtntext = get_string('easyenrollbtn', 'theme_boost_union');
+        
+        $course = $this->page->course;
+        $context = context_course::instance($course->id);
+        $showenrollinktoteacher = has_capability('moodle/course:viewhiddenactivities', $context) && $globalhaseasyenrollment && $coursehaseasyenrollment && $this->page->pagelayout == 'course';
+        //End DBN Update
+
         $pagetype = $this->page->pagetype;
         $homepage = get_home_page();
         $homepagetype = null;
@@ -320,6 +368,22 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $header->pageheadingbutton = $this->page_heading_button();
         $header->courseheader = $this->course_header();
         $header->headeractions = $this->page->get_header_actions();
+
+        //Begin DBN Update
+        $header->hasmycourses = $hasmycourses;
+        $header->mycourses = $mycourses;
+        $header->fpicons = $fpicons;
+        $header->enrolform = $enrolform;
+        $header->courseprogressbar = $courseprogressbar;
+        $header->showenrollinktoteacher = $showenrollinktoteacher;
+        $header->mycoursesmenu = $mycoursesmenu;
+        $header->easycodetitle = $easycodetitle;
+        $header->easycodelink = $easycodelink;
+        $header->courseactivitiesmenu = $this->courseactivities_menu();
+        $header->courseactivitiesbtntext = $courseactivitiesbtntext;
+        $header->courseenrollmentcode = $courseenrollmentcode;
+        $header->hascourseactivities = $hascourseactivities;
+        //End DBN Update
 
         // Add the course header image for rendering.
         if ($this->page->pagelayout == 'course' && (get_config('theme_boost_union', 'courseheaderimageenabled')
@@ -354,4 +418,331 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         return $this->render_from_template('core/full_header', $header);
     }
+
+    //Begin DBN Update Functions
+
+    public function enrolform() {
+        $enrolform = '';
+        $plugin = enrol_get_plugin('easy');
+
+        if ($plugin && !isguestuser() && ($this->page->pagelayout == 'mydashboard' || $this->page->pagelayout == 'frontpage' || $this->page->pagelayout == 'mycourses')) {
+
+            $enrolform = '<div class="easyenrolform">';
+            $enrolform .= $plugin->get_form();
+            $enrolform .= '</div>';
+        }
+        return $enrolform;
+    }
+
+    public function courseprogressbar() {
+        global $PAGE;
+        $course = $this->page->course;
+        $context = context_course::instance($course->id);
+        $hasprogressbar = (empty($this->page->theme->settings->showprogressbar)) ? false : true;
+        $iscoursepage = $this->page->pagelayout == 'course';
+
+        // Student Dash
+        if (\core_completion\progress::get_course_progress_percentage($PAGE->course)) {
+            $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course);
+            $comppercent = number_format($comppc, 0);
+        }
+        else {
+            $comppercent = 0;
+        }
+        $progresschartcontext = ['progress' => $comppercent, 'hasprogressbar' => $hasprogressbar, 'iscoursepage' => $iscoursepage];
+        $progress = $this->render_from_template('theme_boost_union/progress-bar', $progresschartcontext);
+
+        return $progress;
+    }
+
+// The following code is a copied work of the code from theme Essential https://moodle.org/plugins/theme_essential, @copyright Gareth J Barnard
+    protected static function timeaccesscompare($a, $b) {
+        // Timeaccess is lastaccess entry and timestart an enrol entry.
+        if ((!empty($a->timeaccess)) && (!empty($b->timeaccess))) {
+            // Both last access.
+            if ($a->timeaccess == $b->timeaccess) {
+                return 0;
+            }
+            return ($a->timeaccess > $b->timeaccess) ? -1 : 1;
+        }
+        else if ((!empty($a->timestart)) && (!empty($b->timestart))) {
+            // Both enrol.
+            if ($a->timestart == $b->timestart) {
+                return 0;
+            }
+            return ($a->timestart > $b->timestart) ? -1 : 1;
+        }
+        // Must be comparing an enrol with a last access.
+        // -1 is to say that 'a' comes before 'b'.
+        if (!empty($a->timestart)) {
+            // 'a' is the enrol entry.
+            return -1;
+        }
+        // 'b' must be the enrol entry.
+        return 1;
+    }
+    // End copied code
+
+    // The following code is a derivative work of the code from theme Essential https://moodle.org/plugins/theme_essential, by Gareth J Barnard
+    public function boost_union_mycourses() {
+        $context = $this->page->context;
+        $menu = new custom_menu();
+        
+            $branchtitle = get_string('latestcourses', 'theme_boost_union');
+            $branchlabel = $branchtitle;
+            $branchurl = new moodle_url('/my/courses.php');
+            $branchsort = 10000;
+            $branch = $menu->add($branchlabel, $branchurl, $branchtitle, $branchsort);
+            $dashlabel = get_string('viewallcourses', 'theme_boost_union');
+            $dashurl = new moodle_url("/my/courses.php");
+            $dashtitle = $dashlabel;
+            $nomycourses = get_string('nomycourses', 'theme_boost_union');
+            $courses = enrol_get_my_courses(null, 'sortorder ASC');
+             
+                if ($courses) {
+                    // We have something to work with.  Get the last accessed information for the user and populate.
+                    global $DB, $USER;
+                    $lastaccess = $DB->get_records('user_lastaccess', array('userid' => $USER->id) , '', 'courseid, timeaccess');
+                    if ($lastaccess) {
+                        foreach ($courses as $course) {
+                            if (!empty($lastaccess[$course->id])) {
+                                $course->timeaccess = $lastaccess[$course->id]->timeaccess;
+                            }
+                        }
+                    }
+                    // Determine if we need to query the enrolment and user enrolment tables.
+                    $enrolquery = false;
+                    foreach ($courses as $course) {
+                        if (empty($course->timeaccess)) {
+                            $enrolquery = true;
+                            break;
+                        }
+                    }
+                    if ($enrolquery) {
+                        // We do.
+                        $params = array(
+                            'userid' => $USER->id
+                        );
+                        $sql = "SELECT ue.id, e.courseid, ue.timestart
+                            FROM {enrol} e
+                            JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)";
+                        $enrolments = $DB->get_records_sql($sql, $params, 0, 0);
+                        if ($enrolments) {
+                            // Sort out any multiple enrolments on the same course.
+                            $userenrolments = array();
+                            foreach ($enrolments as $enrolment) {
+                                if (!empty($userenrolments[$enrolment->courseid])) {
+                                    if ($userenrolments[$enrolment->courseid] < $enrolment->timestart) {
+                                        // Replace.
+                                        $userenrolments[$enrolment->courseid] = $enrolment->timestart;
+                                    }
+                                }
+                                else {
+                                    $userenrolments[$enrolment->courseid] = $enrolment->timestart;
+                                }
+                            }
+                            // We don't need to worry about timeend etc. as our course list will be valid for the user from above.
+                            foreach ($courses as $course) {
+                                if (empty($course->timeaccess)) {
+                                    $course->timestart = $userenrolments[$course->id];
+                                }
+                            }
+                        }
+                    }
+                    uasort($courses, array($this,'timeaccesscompare'));
+                }
+                else {
+                    return $nomycourses;
+                }
+                $sortorder = $lastaccess;
+                $i = 0;
+                foreach ($courses as $course) {
+                    if ($course->visible && $i < 7) {
+                        $branch->add(format_string($course->fullname) , new moodle_url('/course/view.php?id=' . $course->id) , format_string($course->shortname));
+                    }
+                    $i += 1;
+                }
+                $branch->add($dashlabel, $dashurl, $dashtitle);
+                $content = '';
+                foreach ($menu->get_children() as $item) {
+                    $context = $item->export_for_template($this);
+                    $content .= $this->render_from_template('theme_boost_union/mycourses', $context);
+                }
+        return $content;
+    }
+    // End derivative work
+
+    public function fpicons() {
+        $context = $this->page->context;
+        $hasslideicon = (empty($this->page->theme->settings->slideicon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->slideicon;
+        $slideiconbuttonurl = 'data-toggle="collapse" data-target="#collapseExample';
+        $slideiconbuttontext = (empty($this->page->theme->settings->slideiconbuttontext)) ? false : format_string($this->page->theme->settings->slideiconbuttontext);
+        $hasnav1icon = (empty($this->page->theme->settings->nav1icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav1icon;
+        $hasnav2icon = (empty($this->page->theme->settings->nav2icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav2icon;
+        $hasnav3icon = (empty($this->page->theme->settings->nav3icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav3icon;
+        $hasnav4icon = (empty($this->page->theme->settings->nav4icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav4icon;
+        $hasnav5icon = (empty($this->page->theme->settings->nav5icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav5icon;
+        $hasnav6icon = (empty($this->page->theme->settings->nav6icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav6icon;
+        $hasnav7icon = (empty($this->page->theme->settings->nav7icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav7icon;
+        $hasnav8icon = (empty($this->page->theme->settings->nav8icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav8icon;
+        $nav1buttonurl = (empty($this->page->theme->settings->nav1buttonurl)) ? false : $this->page->theme->settings->nav1buttonurl;
+        $nav2buttonurl = (empty($this->page->theme->settings->nav2buttonurl)) ? false : $this->page->theme->settings->nav2buttonurl;
+        $nav3buttonurl = (empty($this->page->theme->settings->nav3buttonurl)) ? false : $this->page->theme->settings->nav3buttonurl;
+        $nav4buttonurl = (empty($this->page->theme->settings->nav4buttonurl)) ? false : $this->page->theme->settings->nav4buttonurl;
+        $nav5buttonurl = (empty($this->page->theme->settings->nav5buttonurl)) ? false : $this->page->theme->settings->nav5buttonurl;
+        $nav6buttonurl = (empty($this->page->theme->settings->nav6buttonurl)) ? false : $this->page->theme->settings->nav6buttonurl;
+        $nav7buttonurl = (empty($this->page->theme->settings->nav7buttonurl)) ? false : $this->page->theme->settings->nav7buttonurl;
+        $nav8buttonurl = (empty($this->page->theme->settings->nav8buttonurl)) ? false : $this->page->theme->settings->nav8buttonurl;
+        $nav1buttontext = (empty($this->page->theme->settings->nav1buttontext)) ? false : format_string($this->page->theme->settings->nav1buttontext);
+        $nav2buttontext = (empty($this->page->theme->settings->nav2buttontext)) ? false : format_string($this->page->theme->settings->nav2buttontext);
+        $nav3buttontext = (empty($this->page->theme->settings->nav3buttontext)) ? false : format_string($this->page->theme->settings->nav3buttontext);
+        $nav4buttontext = (empty($this->page->theme->settings->nav4buttontext)) ? false : format_string($this->page->theme->settings->nav4buttontext);
+        $nav5buttontext = (empty($this->page->theme->settings->nav5buttontext)) ? false : format_string($this->page->theme->settings->nav5buttontext);
+        $nav6buttontext = (empty($this->page->theme->settings->nav6buttontext)) ? false : format_string($this->page->theme->settings->nav6buttontext);
+        $nav7buttontext = (empty($this->page->theme->settings->nav7buttontext)) ? false : format_string($this->page->theme->settings->nav7buttontext);
+        $nav8buttontext = (empty($this->page->theme->settings->nav8buttontext)) ? false : format_string($this->page->theme->settings->nav8buttontext);
+        $nav1target = (empty($this->page->theme->settings->nav1target)) ? false : $this->page->theme->settings->nav1target;
+        $nav2target = (empty($this->page->theme->settings->nav2target)) ? false : $this->page->theme->settings->nav2target;
+        $nav3target = (empty($this->page->theme->settings->nav3target)) ? false : $this->page->theme->settings->nav3target;
+        $nav4target = (empty($this->page->theme->settings->nav4target)) ? false : $this->page->theme->settings->nav4target;
+        $nav5target = (empty($this->page->theme->settings->nav5target)) ? false : $this->page->theme->settings->nav5target;
+        $nav6target = (empty($this->page->theme->settings->nav6target)) ? false : $this->page->theme->settings->nav6target;
+        $nav7target = (empty($this->page->theme->settings->nav7target)) ? false : $this->page->theme->settings->nav7target;
+        $nav8target = (empty($this->page->theme->settings->nav8target)) ? false : $this->page->theme->settings->nav8target;
+        $slidetextbox = (empty($this->page->theme->settings->slidetextbox && isloggedin())) ? false : format_text($this->page->theme->settings->slidetextbox, FORMAT_HTML, array(
+            'noclean' => true
+        ));
+
+        $fp_icons = [
+            'hasslidetextbox' => (!empty($this->page->theme->settings->slidetextbox && isloggedin())) ,
+            'iconwidth' =>  $this->page->theme->settings->iconwidth,
+            'slidetextbox' => $slidetextbox, 'hasfptextboxlogout' => !isloggedin() ,
+            'hasfpiconnav' => ($hasnav1icon || $hasnav2icon || $hasnav3icon || $hasnav4icon || $hasnav5icon || $hasnav6icon || $hasnav7icon || $hasnav8icon || $hasslideicon ? true : false) && ($this->page->pagelayout == 'mydashboard' || $this->page->pagelayout == 'frontpage' || $this->page->pagelayout == 'mycourses'), 
+            'fpiconnav' => array(
+                array(
+                    'hasicon' => $hasnav1icon,
+                    'linkicon' => $hasnav1icon,
+                    'link' => $nav1buttonurl,
+                    'linktext' => $nav1buttontext,
+                    'linktarget' => $nav1target
+                ) ,
+                array(
+                    'hasicon' => $hasnav2icon,
+                    'linkicon' => $hasnav2icon,
+                    'link' => $nav2buttonurl,
+                    'linktext' => $nav2buttontext,
+                    'linktarget' => $nav2target
+                ) ,
+                array(
+                    'hasicon' => $hasnav3icon,
+                    'linkicon' => $hasnav3icon,
+                    'link' => $nav3buttonurl,
+                    'linktext' => $nav3buttontext,
+                    'linktarget' => $nav3target
+                ) ,
+                array(
+                    'hasicon' => $hasnav4icon,
+                    'linkicon' => $hasnav4icon,
+                    'link' => $nav4buttonurl,
+                    'linktext' => $nav4buttontext,
+                    'linktarget' => $nav4target
+                ) ,
+                array(
+                    'hasicon' => $hasnav5icon,
+                    'linkicon' => $hasnav5icon,
+                    'link' => $nav5buttonurl,
+                    'linktext' => $nav5buttontext,
+                    'linktarget' => $nav5target
+                ) ,
+                array(
+                    'hasicon' => $hasnav6icon,
+                    'linkicon' => $hasnav6icon,
+                    'link' => $nav6buttonurl,
+                    'linktext' => $nav6buttontext,
+                    'linktarget' => $nav6target
+                ) ,
+                array(
+                    'hasicon' => $hasnav7icon,
+                    'linkicon' => $hasnav7icon,
+                    'link' => $nav7buttonurl,
+                    'linktext' => $nav7buttontext,
+                    'linktarget' => $nav7target
+                ) ,
+                array(
+                    'hasicon' => $hasnav8icon,
+                    'linkicon' => $hasnav8icon,
+                    'link' => $nav8buttonurl,
+                    'linktext' => $nav8buttontext,
+                    'linktarget' => $nav8target
+                ) ,
+            ) ,
+            'fpslideicon' => array(
+                array(
+                    'hasicon' => $hasslideicon,
+                    'linkicon' => $hasslideicon,
+                    'link' => $slideiconbuttonurl,
+                    'linktext' => $slideiconbuttontext
+                ) ,
+            ) , 
+        ];
+
+        return $this->render_from_template('theme_boost_union/fpicons', $fp_icons);
+
+    }
+    
+    // Use default image on both dashboard/mycourses and in course pages.
+    public function get_generated_image_for_id($id) {
+        // See if user uploaded a custom header background to the theme.
+        $headerbg = $this->page->theme->setting_file_url('courseheaderimagefallback', 'courseheaderimagefallback');
+        $hasheaderbg = $this->page->theme->settings->courseheaderimageenabled == THEME_BOOST_UNION_SETTING_SELECT_YES;
+        if (isset($headerbg) && $hasheaderbg)  {
+            return $headerbg;
+        } elseif ($hasheaderbg) {
+            // Usefallback image for mycourse regardless.
+            return $this->page->theme->image_url('noimg', 'theme')->out();
+        } else {
+            $color = $this->get_generated_color_for_id($id);
+            $pattern = new \core_geopattern();
+            $pattern->setColor($color);
+            $pattern->patternbyid($id);
+            return $pattern->datauri();
+        }
+    }
+
+    protected function render_courseactivities_menu(custom_menu $menu) {
+        global $CFG;
+        $content = '';
+        foreach ($menu->get_children() as $item) {
+            $context = $item->export_for_template($this);
+            $content .= $this->render_from_template('theme_boost_union/activitygroups', $context);
+        }
+        return $content;
+    }
+    
+    public function courseactivities_menu() {
+        global $PAGE, $COURSE, $OUTPUT, $CFG;
+        $menu = new custom_menu();
+        $context = $this->page->context;
+        if (isset($COURSE->id) && $COURSE->id > 1) {
+            $branchtitle = get_string('courseactivities', 'theme_boost_union');
+            $branchlabel = $branchtitle;
+            $branchurl = new moodle_url('#');
+            $branch = $menu->add($branchlabel, $branchurl, $branchtitle, 10002);
+            $data = theme_boost_union_get_course_activities();
+            foreach ($data as $modname => $modfullname) {
+                if ($modname === 'resources') {
+                    $branch->add($modfullname, new moodle_url('/course/resources.php', array(
+                        'id' => $PAGE->course->id
+                    )));
+                }
+                else {
+                    $branch->add($modfullname, new moodle_url('/mod/' . $modname . '/index.php', array(
+                        'id' => $PAGE->course->id
+                    )));
+                }
+            }
+        }
+        return $this->render_courseactivities_menu($menu);
+    }
+    //End DBN Update
 }

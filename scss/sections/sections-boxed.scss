@@ -1,0 +1,26 @@
+/* Style 2 Boxes */
+.course-content ul.topics li.section, .course-content ul.weeks li.section, .course-content ul.cards li.section {
+    padding: 1rem;
+    box-shadow: 0px 0px 3px rgba($primary, 30%);
+    margin: 2rem 0;
+}
+@media (min-width: 768px) {
+    .course-content ul.topics li.section .content.course-content-item-content, .course-content ul.weeks li.section .content.course-content-item-content, .course-content ul.cards li.section .content.course-content-item-content{
+        margin: 0 3rem;
+        padding: 0;
+    }
+}
+
+.activity-item:not(.activityinline) {
+    border: 0;
+    padding: 0.75rem;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    border-top: 2px solid transparent;
+    margin-bottom: 1.5rem;
+}
+.activity-item:not(.activityinline):hover {
+    border-bottom: 2px solid $gray-300;
+    border-top: 2px solid $gray-300;
+    background-color: rgb($primary, 4%);
+}
