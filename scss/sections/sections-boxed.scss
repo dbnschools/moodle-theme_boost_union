@@ -1,8 +1,9 @@
 /* Style 2 Boxes */
 .course-content ul.topics li.section, .course-content ul.weeks li.section, .course-content ul.cards li.section {
     padding: 1rem;
-    box-shadow: 0px 0px 3px rgba($primary, 30%);
-    margin: 2rem 0;
+    box-shadow: 0px 0px 3px rgba($black, 30%);
+    margin: 0 0 2rem 0;
+    background-color: $white;
 }
 @media (min-width: 768px) {
     .course-content ul.topics li.section .content.course-content-item-content, .course-content ul.weeks li.section .content.course-content-item-content, .course-content ul.cards li.section .content.course-content-item-content{

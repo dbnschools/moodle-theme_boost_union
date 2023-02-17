@@ -67,18 +67,20 @@ $toast-header-color:                $gray-100 !default;
 $toast-header-background-color:     rgba($white, .1) !default;
 
 // Begin DBN Update.
-$drawer-bg:                        #dbe3e5 !default;
+$drawer-bg:                        $white !default;
 $navbar-dark-color:                rgba($black, 1) !default;
 $navbar-dark-hover-color:          rgba($white, 0.5) !default;
 $navbar-light-color:               rgba($white, 1) !default;
 $navbar-light-hover-color:         rgba($black, 0.5) !default;
-$navbar-bg:                        #cddfe3 !default;
+$navbar-bg:                        #ffffff !default;
 $navbar-link:                      $black !default;
 $navbar-link-hover:                $black !default;
 $navbarsitetitlecolor:             $black !default;
-$courseheaderbg:                   #fff !default;
-$pagenavbuttonsbg:                 #a9cbd3 !default;
-$body-bg:                          #EFF7F6 !default;
+$courseheaderbg:                   #f4f4f4 !default;
+$pagenavbuttonsbg:                 #ccd7da !default;
+$body-bg:                          #43525a !default;
+
+$nav-tabs-link-active-bg:           rgba($primary, 10%) !default;
 // End DBN Update.
 
 // Custom control size
@@ -93,8 +95,8 @@ $dropdown-link-hover-bg: $primary;
 
 $popover-max-width: 300px !default;
 
-$border-radius: 0 !default;
-$border-radius-lg: 0 !default;
+$border-radius: .25rem !default;
+$border-radius-lg: .5rem !default;
 
 // stylelint-disable
 $theme-colors: () !default;
@@ -180,7 +182,7 @@ body {
     color: $navbar-link;
 }
 .userinitials {
-    background-color: #ffffff;
+    background-color: $pagenavbuttonsbg;
 }
 #usernavigation .usermenu .dropdown-toggle::after, span.login a {
     color: $navbar-link;
@@ -285,11 +287,6 @@ form.editmode-switch-form {
     padding: 1rem;
     border-radius: $border-radius;
 }
-.course-content ul.topics li.section, .course-content ul.weeks li.section {
-    background-color: $white;
-    box-shadow: none;
-    border-radius: $border-radius;
-}
 #page.drawers .main-inner {
     padding: 0;
     box-shadow: 0 0 5px 0 rgb(0 0 0 / 60%);
@@ -299,13 +296,13 @@ form.editmode-switch-form {
 .dropdown.mycoursesmenu {
    // background-color: $navbar-bg;
     padding: 0.25rem 0.5rem;
-    border-radius: 3px;
+    border-radius: $border-radius;
 }
 .dropdown-menu.dropdown-menu-right.iconsidebar.show {
     padding: 1rem;
     width: 235px;
     border: 0;
-    border-radius: 0;
+    border-radius: $border-radius;
     box-shadow: 0px 2px 8px rgb(0 0 0 / 40%);
 }
 .dropdown.mycoursesmenu i::after {
@@ -324,23 +321,29 @@ form.editmode-switch-form {
 }
 
 // Header content.
-.pagelayout-report header#page-header, .pagelayout-course header#page-header, .pagelayout-incourse header#page-header, .pagelayout-admin header#page-header, .pagelayout-base header#page-header{
+header#page-header {
     background-color: $courseheaderbg;
     border-radius: $border-radius $border-radius 0 0;
     padding-top: 1rem;
 }
-.pagelayout-report .secondary-navigation, .pagelayout-course .secondary-navigation, .pagelayout-incourse .secondary-navigation, .pagelayout-admin .secondary-navigation, .pagelayout-base .secondary-navigation {
+//.pagelayout-report .secondary-navigation, .pagelayout-course .secondary-navigation, .pagelayout-incourse .secondary-navigation, .pagelayout-admin .secondary-navigation, .pagelayout-base .secondary-navigation, .pagelayout-coursecategory .secondary-navigation {
+
+.secondary-navigation {
     max-width: $course-content-maxwidth;
     margin-left: auto;
     margin-right: auto;
     background-color: $courseheaderbg;
     border-radius: 0 0 $border-radius $border-radius;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 #courseheaderimage {
     background-size: cover;
     border-radius: 0!important;
     margin-bottom: 0!important;
+    position: relative;
+}
+#courseheaderimage.p-3 {
+    padding: 0 !important;
 }
 .format-site .secondary-navigation {
     max-width: 100%;
@@ -395,7 +398,7 @@ header#page-header .progress {
 .easyenrolform {
     margin-left: auto; 
     margin-right: auto; 
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
 }
 
 .breadcrumb a {
@@ -408,6 +411,8 @@ header#page-header .progress {
     display: inline-flex;
     float: right;
     box-shadow: 0 0 3px 0px rgb($black,30%);
+    z-index: 1;
+    position: relative;
 }
 
 // Fix for full width issues on activity pages.
@@ -423,11 +428,15 @@ header#page-header .progress {
 // Background for header text
 .courseheaderimage-light .page-context-header {
     padding: .25rem 1rem;
-    background-color: rgba($white, 35%);
+    background-color: rgba($white, 45%);
+    backdrop-filter: blur(7px);
+   //border-radius: $border-radius;
 }
 .courseheaderimage-dark .page-context-header {
     padding: .25rem 1rem;
-    background-color: rgba($black, 35%);
+    background-color: rgba($black, 45%);
+    backdrop-filter: blur(7px);
+    //border-radius: $border-radius;
 }
 
 
@@ -460,4 +469,29 @@ header#page-header .progress {
         min-height: 100px !important;
     }
 }
+
+.block .block-cards .course-summaryitem {
+    background-color: rgb($primary, 4%);
+}
+
+div#page-content:not(#page-login-index div#page-content, #page-mod-quiz-attempt div#page-content) {
+    background: linear-gradient($courseheaderbg 0px, rgba($courseheaderbg,0.75) 75px, rgba($courseheaderbg,0) 150px);
+}
+
+
+.path-mod .activity-header:not(:empty) {
+    background-color: $white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+}
+
+.block_myoverview.block {
+    padding: 1rem;
+}
+
+div#fpslider {
+    background-color: $white;
+    border-radius: $border-radius;
+    border: 1px solid $gray-400;
+}
+
 // End DBN Update.
