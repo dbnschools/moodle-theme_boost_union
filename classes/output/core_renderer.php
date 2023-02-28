@@ -309,6 +309,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $fpicons = $this->fpicons();
         $enrolform = $this->enrolform();
         $courseprogressbar = $this->courseprogressbar();
+        $coursemanagementdash = $this->coursemanagementdash();
+        $showincourseonlymanagementbtn = isset($COURSE->id) && $COURSE->id > 1 && $this->page->theme->settings->showcoursemanagement == 1 && isloggedin() && !isguestuser();
         
         $globalhaseasyenrollment = enrol_get_plugin('easy');
         $coursehaseasyenrollment = '';
@@ -336,7 +338,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         
         $course = $this->page->course;
         $context = context_course::instance($course->id);
-        $showenrollinktoteacher = has_capability('moodle/course:viewhiddenactivities', $context) && $globalhaseasyenrollment && $coursehaseasyenrollment && $this->page->pagelayout == 'course';
+        $showenrollinktoteacher = has_capability('moodle/course:viewhiddenactivities', $context) && $this->page->theme->settings->showeasyenrolbtn == 1  && $globalhaseasyenrollment && $coursehaseasyenrollment && $this->page->pagelayout == 'course';
         //End DBN Update
 
         $pagetype = $this->page->pagetype;
@@ -383,6 +385,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $header->courseactivitiesbtntext = $courseactivitiesbtntext;
         $header->courseenrollmentcode = $courseenrollmentcode;
         $header->hascourseactivities = $hascourseactivities;
+        $header->coursemanagementdash = $coursemanagementdash;
+        $header->showincourseonlymanagementbtn = $showincourseonlymanagementbtn;
         //End DBN Update
 
         // Add the course header image for rendering.
@@ -743,6 +747,174 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         }
         return $this->render_courseactivities_menu($menu);
+    }
+
+    /**
+     * Renders the login form.
+     *
+     * @param \core_auth\output\login $form The renderable.
+     * @return string
+     */
+    public function render_login(\core_auth\output\login $form) {
+        global $CFG, $SITE;
+
+        $context = $form->export_for_template($this);
+
+        $context->errorformatted = $this->error_text($context->error);
+        $url = $this->get_logo_url();
+        if ($url) {
+            $url = $url->out(false);
+        }
+        $context->hideloginform = $this->page->theme->settings->hideloginform == 1;
+        $context->logourl = $url;
+        $context->sitename = format_string($SITE->fullname, true,
+                ['context' => context_course::instance(SITEID), "escape" => false]);
+
+        return $this->render_from_template('core/loginform', $context);
+    }
+
+    public function coursemanagementdash() {
+        global $PAGE, $COURSE, $CFG, $DB, $OUTPUT, $USER;
+
+        $course = $this->page->course;
+        $context = context_course::instance($course->id);
+        $hascoursemanagement = has_capability('moodle/course:viewhiddenactivities', $context);
+        $togglebutton = get_string('coursemanagementbutton', 'theme_boost_union');
+        $showincourseonly = isset($COURSE->id) && $COURSE->id > 1 && $this->page->theme->settings->showcoursemanagement == 1 && isloggedin() && !isguestuser();
+        $globalhaseasyenrollment = enrol_get_plugin('easy');
+
+
+        // Link Headers and text.
+        $manageuserstitle = get_string('manageuserstitle', 'theme_boost_union');
+        $gradebooktitle = get_string('gradebooktitle', 'theme_boost_union');
+        $progresstitle = get_string('progresstitle', 'theme_boost_union');
+        $coursemanagementmessage = (empty($PAGE->theme->settings->coursemanagementtextbox)) ? false : format_text($PAGE->theme->settings->coursemanagementtextbox, FORMAT_HTML, array(
+            'noclean' => true
+        ));
+
+        // Build links.
+        $dashlinks = [
+            'manageuserstitle' => get_string('manageuserstitle', 'theme_boost_union'),
+            'gradebooktitle' => get_string('gradebooktitle', 'theme_boost_union'),
+            'progresstitle' => get_string('progresstitle', 'theme_boost_union'),
+            'showincourseonly' => $showincourseonly,
+
+            'dashlinks' => array(
+                // User Links.
+                // Bulkenrol.
+                array(
+                    'hasuserlinks' => get_string('pluginname', 'local_bulkenrol'),
+                    'title' => get_string('pluginname', 'local_bulkenrol'),
+                    'url' => new moodle_url('/local/bulkenrol/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ) ,
+                // Easy Enrollment.
+                array(
+                    'hasuserlinks' => get_string('header_coursecodes', 'enrol_easy'),
+                    'title' => get_string('header_coursecodes', 'enrol_easy'),
+                    'url' => new moodle_url('/enrol/editinstance.php', array(
+                        'courseid' => $PAGE->course->id,
+                        'id' => $easyenrollinstance->id,
+                        'type' => 'easy'
+                    ))
+                ),
+                // Participants.
+                array(
+                    'hasuserlinks' => get_string('participants', 'moodle'),
+                    'title' => get_string('participants', 'moodle'),
+                    'url' => new moodle_url('/user/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Groups.
+                array(
+                    'hasuserlinks' => get_string('groups', 'group'),
+                    'title' => get_string('groups', 'group'),
+                    'url' => new moodle_url('/group/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+
+                // Gradebook Links.
+                //Export to MISTAR
+                array(
+                    'hasgradebooklinks' => get_string('exporttomistar', 'theme_boost_union'),
+                    'title' => get_string('exporttomistar', 'theme_boost_union'),
+                    'url' => new moodle_url('/grade/export/mistar/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Gradebook grader.
+                array(
+                    'hasgradebooklinks' => get_string('gradebook', 'grades'),
+                    'title' => get_string('gradebook', 'grades'),
+                    'url' => new moodle_url('/grade/report/grader/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // User Gradebook Report.
+                array(
+                    'hasgradebooklinks' => get_string('userreportgradebook', 'theme_boost_union'),
+                    'title' => get_string('userreportgradebook', 'theme_boost_union'),
+                    'url' => new moodle_url('/grade/report/user/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Greadebook Setup.
+                array(
+                    'hasgradebooklinks' => get_string('gradebooksetup', 'grades'),
+                    'title' => get_string('gradebooksetup', 'grades'),
+                    'url' => new moodle_url('/grade/edit/tree/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+
+                // Progress links.
+                // Badges.
+                array(
+                    'hasprogresslinks' => get_string('managebadges', 'badges'),
+                    'title' => get_string('managebadges', 'badges'),
+                    'url' => new moodle_url('/badges/view.php?type=2', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Course Completion.
+                array(
+                    'hasprogresslinks' => get_string('editcoursecompletionsettings', 'completion'),
+                    'title' => get_string('editcoursecompletionsettings', 'completion'),
+                    'url' => new moodle_url('/course/completion.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Activity Completion.
+                array(
+                    'hasprogresslinks' => get_string('activitycompletion', 'completion'),
+                    'title' => get_string('activitycompletion', 'completion'),
+                    'url' => new moodle_url('/report/progress/index.php', array(
+                        'course' => $PAGE->course->id
+                    ))
+                ),
+                // Activity Report.
+                array(
+                    'hasprogresslinks' => get_string('outline:view', 'report_outline'),
+                    'title' => get_string('outline:view', 'report_outline'),
+                    'url' => new moodle_url('/report/outline/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Live Logs.
+                array(
+                    'hasprogresslinks' => get_string('loglive:view', 'report_loglive'),
+                    'title' => get_string('loglive:view', 'report_loglive'),
+                    'url' => new moodle_url('/report/loglive/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                
+            ),
+        ];
+        return $this->render_from_template('theme_boost_union/coursemanagement', $dashlinks);
     }
     //End DBN Update
 }

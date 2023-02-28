@@ -47,10 +47,19 @@
                -> No: Wrap the course header of Moodle core in a #courseheaderimage element and add the configured
                       stacked layout class to it.
 }}
+{{{coursemanagementdash}}}
 <header id="page-header" class="header-maxwidth d-print-none">
 
     {{! Begin DBN Update }}
+   
     <div class="headerbuttons">
+        {{#showincourseonlymanagementbtn}}
+            <div class="text-right blockpanelbtn">
+                <button id="blocksliderbutton" class="btn btn-secondary headerbutton blockpanelbutton" type="button" data-toggle="collapse" data-target="#blockslider" aria-expanded="false" aria-controls="blockslider">
+            <i class="fa fa-arrows-v" aria-hidden="true"> </i> <span class="blockbtntext d-none d-sm-inline-block">{{# str }} courseblockpanelbtn, theme_boost_union {{/ str }}</span>
+                </button>
+            </div>
+        {{/showincourseonlymanagementbtn}}
         {{#showenrollinktoteacher}}
         <div class="enrollbtn"> 
             <a href="{{{easycodelink}}}" title="{{{courseenrollmentcode}}}" class="btn btn-secondary headerbutton easyenrolbtn" style="float:right;"><i class="fa fa-1x fa-key" aria-hidden="true"></i><span class="sr-only">{{{courseenrollmentcode}}}</span></a>

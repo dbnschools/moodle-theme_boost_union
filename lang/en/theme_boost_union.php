@@ -627,4 +627,21 @@ $string['showcourseactivities'] = 'Show Course Activities Menu';
 $string['showcourseactivities_desc'] = 'Show a Course Activities menu icon in the header.';
 $string['courseactivitiesbtntext'] = 'Course Activities';
 $string['courseenrollmentcode'] = 'Course Enrollment Code';
+$string['hideloginform'] = 'Hide Login Form';
+$string['hideloginform_desc'] = '<b>BE CAREFUL!  Checking this feature will remove the login form.</b>  Only hide the login form if you are using another login method such as Google Login and never need to use login form.  In order to recover you must remove the file /moodle/theme/boost_union/templates/core/loginform.mustache.  Deleting this file will allow the login form to reappear if you get locked out completely.';
+$string['nomycourses'] = 'You are not enrolled in any courses';
+$string['easyenrollbtn'] = 'Enrollment Codes';
+$string['manageuserstitle'] = 'Users';
+$string['gradebooktitle'] = 'Gradebook';
+$string['progresstitle'] = 'Student Progress';
+$string['coursemanagementbutton'] = 'Course Management';
+$string['exporttomistar'] = 'Export to MIStar';
+$string['userreportgradebook'] = 'User Report';
+$string['courseblockpanelbtnclose'] = 'Close';
+$string['courseblockpanelbtn'] = 'Course Management';
+$string['showeasyenrolbtn'] = 'Show Easy Enrollment Button';
+$string['showeasyenrolbtn_desc'] = 'Display a quick link in the header for the Easy Enrollment plugin.  This allows teachers to quickly get to their easy enrollment codes while in a course.';
+$string['showcoursemanagement'] = 'Show Course Management';
+$string['showcoursemanagement_desc'] = 'Course Management is a collection of most used links for teachers.  This is a sliding panel that is toggled from the header of the course.';
+
 // End DBN Update.

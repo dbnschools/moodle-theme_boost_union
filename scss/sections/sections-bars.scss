@@ -1,6 +1,6 @@
 /* Sections Bars */
 .course-section-header {
-    background-color: rgba($primary, 20%);
+    background-color: rgba($primary, 5%);
     padding: 0.5rem;
     border-radius: 0.25rem;
 }
@@ -22,4 +22,9 @@
 .course-content ul.topics li.section, .course-content ul.weeks li.section {
     box-shadow: none;
     border-radius: $border-radius;
+}
+
+.course-content ul.topics li.section, .course-content ul.weeks li.section, .course-content ul.cards li.section {
+    padding: 1rem;
+    background-color: $white;
 }

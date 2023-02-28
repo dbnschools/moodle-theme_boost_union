@@ -473,6 +473,17 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $setting = new admin_setting_heading($name, $title, null);
         $tab->add($setting);
 
+        // Begin DBN Update.
+        // Show/hide course progressbar boost_union.
+        $name = 'theme_boost_union/hideloginform';
+        $title = get_string('hideloginform', 'theme_boost_union');
+        $description = get_string('hideloginform_desc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+        // End DBN Update.
+
         // Create login form position setting.
         $name = 'theme_boost_union/loginformposition';
         $title = get_string('loginformpositionsetting', 'theme_boost_union', null, true);
@@ -585,6 +596,15 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
                 THEME_BOOST_UNION_SETTING_SELECT_YES);
 
         // Begin DBN Update.
+        // Show hide easy enrollment btn.
+        $name = 'theme_boost_union/showcoursemanagement';
+        $title = get_string('showcoursemanagement', 'theme_boost_union');
+        $description = get_string('showcoursemanagement_desc', 'theme_boost_union');
+        $default = '1';
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
         // Show/hide course progressbar boost_union.
         $name = 'theme_boost_union/showprogressbar';
         $title = get_string('showprogressbar', 'theme_boost_union');
@@ -598,6 +618,15 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $name = 'theme_boost_union/showlatestcourses';
         $title = get_string('showlatestcourses', 'theme_boost_union');
         $description = get_string('showlatestcourses_desc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // Show hide easy enrollment btn.
+        $name = 'theme_boost_union/showeasyenrolbtn';
+        $title = get_string('showeasyenrolbtn', 'theme_boost_union');
+        $description = get_string('showeasyenrolbtn_desc', 'theme_boost_union');
         $default = '';
         $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
         $setting->set_updatedcallback('theme_reset_all_caches');
