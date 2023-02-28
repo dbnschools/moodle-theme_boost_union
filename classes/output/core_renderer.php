@@ -299,6 +299,10 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function full_header() {
         //Begin DBN Update
         global $DB, $OUTPUT, $COURSE;
+        //global $PAGE, $COURSE, $CFG, $DB, $OUTPUT, $USER;
+
+        $course = $this->page->course;
+        $context = context_course::instance($course->id);
         $mycourses = get_string('latestcourses', 'theme_boost_union');
         $mycoursesurl = new moodle_url('/my/');
         $mycoursesmenu = $this->boost_union_mycourses();
@@ -310,7 +314,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $enrolform = $this->enrolform();
         $courseprogressbar = $this->courseprogressbar();
         $coursemanagementdash = $this->coursemanagementdash();
-        $showincourseonlymanagementbtn = isset($COURSE->id) && $COURSE->id > 1 && $this->page->theme->settings->showcoursemanagement == 1 && isloggedin() && !isguestuser();
+        $showincourseonlymanagementbtn = isset($COURSE->id) && $COURSE->id > 1 && $this->page->theme->settings->showcoursemanagement == 1 && has_capability('moodle/course:viewhiddenactivities', $context) && isloggedin() && !isguestuser();
         
         $globalhaseasyenrollment = enrol_get_plugin('easy');
         $coursehaseasyenrollment = '';
@@ -785,9 +789,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
 
         // Link Headers and text.
-        $manageuserstitle = get_string('manageuserstitle', 'theme_boost_union');
-        $gradebooktitle = get_string('gradebooktitle', 'theme_boost_union');
-        $progresstitle = get_string('progresstitle', 'theme_boost_union');
         $coursemanagementmessage = (empty($PAGE->theme->settings->coursemanagementtextbox)) ? false : format_text($PAGE->theme->settings->coursemanagementtextbox, FORMAT_HTML, array(
             'noclean' => true
         ));
@@ -797,7 +798,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
             'manageuserstitle' => get_string('manageuserstitle', 'theme_boost_union'),
             'gradebooktitle' => get_string('gradebooktitle', 'theme_boost_union'),
             'progresstitle' => get_string('progresstitle', 'theme_boost_union'),
+            'coursemanagetitle' => get_string('coursemanagetitle', 'theme_boost_union'),
             'showincourseonly' => $showincourseonly,
+            'hascoursemanagement' => $hascoursemanagement,
 
             'dashlinks' => array(
                 // User Links.
@@ -908,6 +911,48 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     'hasprogresslinks' => get_string('loglive:view', 'report_loglive'),
                     'title' => get_string('loglive:view', 'report_loglive'),
                     'url' => new moodle_url('/report/loglive/index.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+
+                // Course Management.
+                // Reset course.
+                array(
+                    'hascoursemanagelinks' => get_string('reset', 'moodle'),
+                    'title' => get_string('reset', 'moodle'),
+                    'url' => new moodle_url('/course/reset.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Copy course.
+                array(
+                    'hascoursemanagelinks' => get_string('copycourse', 'moodle'),
+                    'title' => get_string('copycourse', 'moodle'),
+                    'url' => new moodle_url('/backup/copy.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Backup course.
+                array(
+                    'hascoursemanagelinks' => get_string('backup', 'moodle'),
+                    'title' => get_string('backup', 'moodle'),
+                    'url' => new moodle_url('/backup/backup.php', array(
+                        'id' => $PAGE->course->id
+                    ))
+                ),
+                // Restore course.
+                array(
+                    'hascoursemanagelinks' => get_string('restore', 'moodle'),
+                    'title' => get_string('restore', 'moodle'),
+                    'url' => new moodle_url('/backup/restorefile.php', array(
+                        'contextid' => $PAGE->context->id
+                    ))
+                ),
+                // Import course.
+                array(
+                    'hascoursemanagelinks' => get_string('import', 'moodle'),
+                    'title' => get_string('import', 'moodle'),
+                    'url' => new moodle_url('/backup/import.php', array(
                         'id' => $PAGE->course->id
                     ))
                 ),

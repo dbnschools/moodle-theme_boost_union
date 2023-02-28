@@ -72,7 +72,7 @@ $navbar-dark-color:                rgba($black, 1) !default;
 $navbar-dark-hover-color:          rgba($white, 0.5) !default;
 $navbar-light-color:               rgba($white, 1) !default;
 $navbar-light-hover-color:         rgba($black, 0.5) !default;
-$navbar-bg:                        #ebeff5 !default;
+$navbar-bg:                        $white !default;
 $navbar-link:                      $black !default;
 $navbar-link-hover:                $black !default;
 $navbarsitetitlecolor:             $black !default;
@@ -137,9 +137,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.navbar {
+/*.navbar {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
-}
+    box-shadow: 0 0 9px 0 rgba(0,0,0,.6)!important;
+}*/
 
 // Rounded user pictures
 .userpicture {
@@ -170,7 +171,7 @@ body {
 // Navbar customizations
 .navbar.fixed-top {
     background-color: $navbar-bg!important;
-    box-shadow: 0 0px 3px 0px rgb($black, 60%)!important;
+    box-shadow: 0 0 9px 0 rgba(0,0,0,.6)!important;
 }
 .navbar-light .navbar-nav .nav-link {
     color: $navbar-link;
@@ -246,6 +247,7 @@ form.editmode-switch-form {
 }
 #page.drawers .main-inner {
     box-shadow: 0 13px 37px rgb(92 107 121 / 40%);
+    border: 1px solid $gray-300;
 }
 @media (min-width: 768px) {
     #page.drawers .main-inner {
@@ -365,6 +367,9 @@ header#page-header .progress {
     border-radius: 0;
     border-bottom: 1px solid $gray-300;
 }*/
+#blockslider a.list-group-item {
+    background-color: $body-bg;
+}
 .headerbutton {
     border-radius: 0;
 }
@@ -484,7 +489,7 @@ div#fpslider {
 .courseindex .courseindex-section {
     border-left: solid 3px transparent;
     border: 1px solid $gray-200;
-    margin-bottom: 3px;
+    margin-bottom: 1rem;
     background-color: $white;
 }
 
