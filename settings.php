@@ -1528,6 +1528,38 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);
 
+        // This is the descriptor for teacher create a course
+        $name = 'theme_boost_union/createinfo';
+        $heading = get_string('createinfo', 'theme_boost_union');
+        $information = get_string('createinfodesc', 'theme_boost_union');
+        $setting = new admin_setting_heading($name, $heading, $information);
+        $tab->add($setting);
+
+        // Creator Icon
+        $name = 'theme_boost_union/createicon';
+        $title = get_string('navicon', 'theme_boost_union');
+        $description = get_string('navicondesc', 'theme_boost_union');
+        $default = 'edit';
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/createbuttontext';
+        $title = get_string('naviconbuttontext', 'theme_boost_union');
+        $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+        $default = get_string('naviconbuttoncreatetextdefault', 'theme_boost_union');
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/createbuttonurl';
+        $title = get_string('naviconbuttonurl', 'theme_boost_union');
+        $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+        $default =  $CFG->wwwroot.'/course/edit.php?category=1';
+        $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
 
         // This is the descriptor for teacher create a course
         $name = 'theme_boost_union/sliderinfo';
@@ -1561,6 +1593,8 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
             $setting = new admin_setting_confightmleditor($name, $title, $description, $default);
             $setting->set_updatedcallback('theme_reset_all_caches');
             $tab->add($setting);
+
+
 
             // This is the descriptor for icon One
             $name = 'theme_boost_union/navicon1info';

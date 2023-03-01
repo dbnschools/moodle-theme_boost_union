@@ -582,6 +582,9 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
     public function fpicons() {
         $context = $this->page->context;
+        $hascreateicon = (empty($this->page->theme->settings->createicon && isloggedin() && has_capability('moodle/course:create', $context))) ? false : $this->page->theme->settings->createicon;
+        $createbuttonurl = (empty($this->page->theme->settings->createbuttonurl)) ? false : $this->page->theme->settings->createbuttonurl;
+        $createbuttontext = (empty($this->page->theme->settings->createbuttontext)) ? false : format_string($this->page->theme->settings->createbuttontext);
         $hasslideicon = (empty($this->page->theme->settings->slideicon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->slideicon;
         $slideiconbuttonurl = 'data-toggle="collapse" data-target="#collapseExample';
         $slideiconbuttontext = (empty($this->page->theme->settings->slideiconbuttontext)) ? false : format_string($this->page->theme->settings->slideiconbuttontext);
@@ -691,7 +694,15 @@ class core_renderer extends \theme_boost\output\core_renderer {
                     'link' => $slideiconbuttonurl,
                     'linktext' => $slideiconbuttontext
                 ) ,
-            ) , 
+            ) ,
+            'fpcreateicon' => array(
+                array(
+                    'hasicon' => $hascreateicon,
+                    'linkicon' => $hascreateicon,
+                    'link' => $createbuttonurl,
+                    'linktext' => $createbuttontext
+                ) ,
+            ) ,
         ];
 
         return $this->render_from_template('theme_boost_union/fpicons', $fp_icons);

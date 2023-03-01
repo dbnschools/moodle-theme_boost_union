@@ -644,5 +644,7 @@ $string['showeasyenrolbtn'] = 'Show Easy Enrollment Button';
 $string['showeasyenrolbtn_desc'] = 'Display a quick link in the header for the Easy Enrollment plugin.  This allows teachers to quickly get to their easy enrollment codes while in a course.';
 $string['showcoursemanagement'] = 'Show Course Management';
 $string['showcoursemanagement_desc'] = 'Course Management is a collection of most used links for teachers.  This is a sliding panel that is toggled from the header of the course.';
-
+$string['createinfo'] = 'Special Course Creator Button';
+$string['createinfodesc'] = 'This button appears on the homepage when a user can create new courses.  Those with the role of Course Creator at the site level will see this button.';
+$string['naviconbuttoncreatetextdefault'] = 'Create a Course';
 // End DBN Update.

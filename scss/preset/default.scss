@@ -335,7 +335,10 @@ div#page-content:not(#page-login-index div#page-content, #page-mod-quiz-attempt 
     max-width: 100%;
 }
 .secondary-navigation .navigation, .moremenu .nav-tabs {
-    background-color: $gray-100;
+    background-color: $white;
+}
+.secondary-navigation nav.moremenu.navigation.observed {
+    //box-shadow: 0 0 1px 0px rgb($black,45%);
 }
 @media (min-width: 768px) {
     .secondary-navigation .navigation {
@@ -376,9 +379,9 @@ header#page-header .progress {
 .easyenrolform .btn .btn-secondary, .easyenrolform .qr-button, .easyenrolform .btn, .easyenrolform #enrolform_course_code {
     border-radius: 0px !important;
 }
-.iconset .btn.btn-secondary {
-    //border-radius: 0px !important; 
-    margin-bottom: .5rem;
+.iconset {
+    background-color: $gray-100;
+    padding: 1rem;
 }
 .progress.courseview {
     height: 1.5rem;
@@ -387,15 +390,12 @@ header#page-header .progress {
 .easyenrolform {
     margin-left: auto; 
     margin-right: auto; 
-    padding-bottom: 1rem;
 }
 
 .breadcrumb a {
     color: $black;
 }
-.secondary-navigation nav.moremenu.navigation.observed {
-    box-shadow: 0 0 1px 0px rgb($black,45%);
-}
+
 .headerbuttons {
     display: inline-flex;
     float: right;
