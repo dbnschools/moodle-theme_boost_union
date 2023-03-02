@@ -1497,37 +1497,7 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $information = get_string('iconnavinfo_desc', 'theme_boost_union');
         $setting = new admin_setting_heading($name, $heading, $information);
         $tab->add($setting);
-        // This is the descriptor for icon One
-        $name = 'theme_boost_union/iconwidthinfo';
-        $heading = get_string('iconwidthinfo', 'theme_boost_union');
-        $information = get_string('iconwidthinfodesc', 'theme_boost_union');
-        $setting = new admin_setting_heading($name, $heading, $information);
-        $tab->add($setting);
-        // Icon width setting.
-        $name = 'theme_boost_union/iconwidth';
-        $title = get_string('iconwidth', 'theme_boost_union');
-        $description = get_string('iconwidth_desc', 'theme_boost_union');;
-        $default = '100px';
-        $choices = array(
-                '75px' => '75px',
-                '85px' => '85px',
-                '95px' => '95px',
-                '100px' => '100px',
-                '105px' => '105px',
-                '110px' => '110px',
-                '115px' => '115px',
-                '120px' => '120px',
-                '125px' => '125px',
-                '130px' => '130px',
-                '135px' => '135px',
-                '140px' => '140px',
-                '145px' => '145px',
-                '150px' => '150px',
-        );
-        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
+        
         // This is the descriptor for teacher create a course
         $name = 'theme_boost_union/createinfo';
         $heading = get_string('createinfo', 'theme_boost_union');
@@ -1752,7 +1722,7 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
             $name = 'theme_boost_union/nav4buttonurl';
             $title = get_string('naviconbuttonurl', 'theme_boost_union');
             $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default =  $CFG->wwwroot.'/course/';
+            $default =  '';
             $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
             $setting->set_updatedcallback('theme_reset_all_caches');
             $tab->add($setting);

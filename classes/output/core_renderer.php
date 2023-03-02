@@ -626,7 +626,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         $fp_icons = [
             'hasslidetextbox' => (!empty($this->page->theme->settings->slidetextbox && isloggedin())) ,
-            'iconwidth' =>  $this->page->theme->settings->iconwidth,
             'slidetextbox' => $slidetextbox, 'hasfptextboxlogout' => !isloggedin() ,
             'hasfpiconnav' => ($hasnav1icon || $hasnav2icon || $hasnav3icon || $hasnav4icon || $hasnav5icon || $hasnav6icon || $hasnav7icon || $hasnav8icon || $hasslideicon ? true : false) && ($this->page->pagelayout == 'mydashboard' || $this->page->pagelayout == 'frontpage' || $this->page->pagelayout == 'mycourses'), 
             'fpiconnav' => array(
