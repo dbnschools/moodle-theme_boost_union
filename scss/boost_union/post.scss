@@ -1,4 +1,21 @@
 /*=======================================
+ * Settings: Look -> Branding
+ ======================================*/
+
+/*---------------------------------------
+ * Setting: Compact logo
+ --------------------------------------*/
+
+/* Add an explicit height to the logo in the navbar.
+   This is necessary to render SVG logos properly as their size is calculated different than pixel-based images. */
+.navbar-brand,
+.navbar-brand .logo {
+    height: 100%;
+    width: auto;
+}
+
+
+/*=======================================
  * Settings: Look -> Login page
  ======================================*/
 
@@ -95,6 +112,17 @@
 #page.drawers.show-drawer-right #back-to-top {
     /* Move the back to top button when right drawer is shown. */
     right: calc(#{$drawer-right-width} + 2rem);
+}
+
+/* As soon as the sticky footer is shown (especially in the database activity),
+   the back to top button has to be moved further up.
+   Again, we have to distinguish between really small screens and larger screens
+   (where the fotter button is shown as well). */
+body.hasstickyfooter #back-to-top {
+    bottom: 5rem;
+    @include media-breakpoint-up(sm) {
+        bottom: 9rem;
+    }
 }
 
 
@@ -247,6 +275,14 @@ body.pagelayout-login:not(.loginbackgroundimage) #footnote {
 /*=======================================
  * Settings: Content -> Info banner.
  ======================================*/
+
+/* Adjust the margins of the info banners to align with the header and main content on larger screens. */
+@include media-breakpoint-up(md) {
+    .themeboostunioninfobanner {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
 
 /* Remove margin after last paragraph for a nicer look. */
 .themeboostunioninfobanner p:last-child {

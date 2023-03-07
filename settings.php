@@ -150,7 +150,7 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
                 array('maxfiles' => 20, 'accepted_types' => array('.scss')));
         $tab->add($setting);
 
-        //Begin boost_union
+        //Begin DBN Update
         // Sections Display Options.
         $name = 'theme_boost_union/sectionstyle';
         $title = get_string('sectionstyle' , 'theme_boost_union');
@@ -164,14 +164,14 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);
-        //End boost_union
+        //End DBN Update
 
         // Add tab to settings page.
         $page->add($tab);
 
 
-        // Create advanced settings tab.
-        $tab = new admin_settingpage('theme_boost_union_look_advanced', get_string('advancedsettings', 'theme_boost', null, true));
+        // Create SCSS tab.
+        $tab = new admin_settingpage('theme_boost_union_look_scss', get_string('scsstab', 'theme_boost_union', null, true));
 
         // Create Raw SCSS heading.
         $name = 'theme_boost_union/scssheading';
@@ -219,17 +219,11 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);
 
-        // Create content width heading.
-        $name = 'theme_boost_union/contentwidthheading';
-        $title = get_string('contentwidthheading', 'theme_boost_union', null, true);
-        $setting = new admin_setting_heading($name, $title, null);
-        $tab->add($setting);
-
-        // Setting: H5P content bank max width.
-        $name = 'theme_boost_union/h5pcontentmaxwidth';
-        $title = get_string('h5pcontentmaxwidthsetting', 'theme_boost_union', null, true);
-        $description = get_string('h5pcontentmaxwidthsetting_desc', 'theme_boost_union', null, true);
-        $default = '960px';
+        // Setting: Medium content max width.
+        $name = 'theme_boost_union/mediumcontentmaxwidth';
+        $title = get_string('mediumcontentmaxwidthsetting', 'theme_boost_union', null, true);
+        $description = get_string('mediumcontentmaxwidthsetting_desc', 'theme_boost_union', null, true);
+        $default = '1120px';
         $setting = new admin_setting_configtext($name, $title, $description, $default, $widthregex, 6);
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);
@@ -241,18 +235,52 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         // Create branding tab.
         $tab = new admin_settingpage('theme_boost_union_look_branding', get_string('brandingtab', 'theme_boost_union', null, true));
 
+        // Create logos heading.
+        $name = 'theme_boost_union/logosheading';
+        $title = get_string('logosheading', 'theme_boost_union', null, true);
+        $notificationurl = new moodle_url('/admin/settings.php', array('section' => 'logos'));
+        $notification = new \core\output\notification(get_string('logosheading_desc', 'theme_boost_union', $notificationurl->out()),
+                \core\output\notification::NOTIFY_INFO);
+        $notification->set_show_closebutton(false);
+        $description = $OUTPUT->render($notification);
+        $setting = new admin_setting_heading($name, $title, $description);
+        $tab->add($setting);
+
+        // Replicate the logo setting from core_admin.
+        $name = 'theme_boost_union/logo';
+        $title = get_string('logosetting', 'theme_boost_union', null, true);
+        $description = get_string('logosetting_desc', 'theme_boost_union', null, true);
+        $setting = new admin_setting_configstoredfile($name, $title, $description, 'logo', 0,
+                array('maxfiles' => 1, 'accepted_types' => 'web_image'));
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // Replicate the compact logo setting from core_admin.
+        $name = 'theme_boost_union/logocompact';
+        $title = get_string('logocompactsetting', 'theme_boost_union', null, true);
+        $description = get_string('logocompactsetting_desc', 'theme_boost_union', null, true);
+        $setting = new admin_setting_configstoredfile($name, $title, $description, 'logocompact', 0,
+                array('maxfiles' => 1, 'accepted_types' => 'web_image'));
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
         // Create favicon heading.
         $name = 'theme_boost_union/faviconheading';
         $title = get_string('faviconheading', 'theme_boost_union', null, true);
-        $setting = new admin_setting_heading($name, $title, null);
+        $notificationurl = new moodle_url('/admin/settings.php', array('section' => 'logos'));
+        $notification = new \core\output\notification(get_string('faviconheading_desc', 'theme_boost_union',
+                $notificationurl->out()), \core\output\notification::NOTIFY_INFO);
+        $notification->set_show_closebutton(false);
+        $description = $OUTPUT->render($notification);
+        $setting = new admin_setting_heading($name, $title, $description);
         $tab->add($setting);
 
-        // Setting: Favicon.
+        // Replicate the favicon setting from core_admin.
         $name = 'theme_boost_union/favicon';
         $title = get_string('faviconsetting', 'theme_boost_union', null, true);
         $description = get_string('faviconsetting_desc', 'theme_boost_union', null, true);
         $setting = new admin_setting_configstoredfile($name, $title, $description, 'favicon', 0,
-                array('maxfiles' => 1, 'accepted_types' => array('.ico', '.png')));
+                array('maxfiles' => 1, 'accepted_types' => 'image'));
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);
 
@@ -344,6 +372,7 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $tab->add($setting);
 
         // End DBN Update
+
 
         // Create Bootstrap colors heading.
         $name = 'theme_boost_union/bootstrapcolorsheading';
@@ -474,7 +503,7 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $tab->add($setting);
 
         // Begin DBN Update.
-        // Show/hide course progressbar boost_union.
+        // Show/hide login form.
         $name = 'theme_boost_union/hideloginform';
         $title = get_string('hideloginform', 'theme_boost_union');
         $description = get_string('hideloginform_desc', 'theme_boost_union');
@@ -594,9 +623,9 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $tab->add($setting);
         $page->hide_if('theme_boost_union/courseheaderimageposition', 'theme_boost_union/courseheaderimageenabled', 'neq',
                 THEME_BOOST_UNION_SETTING_SELECT_YES);
-
+        
         // Begin DBN Update.
-        // Show hide easy enrollment btn.
+        // Show hide course management panel.
         $name = 'theme_boost_union/showcoursemanagement';
         $title = get_string('showcoursemanagement', 'theme_boost_union');
         $description = get_string('showcoursemanagement_desc', 'theme_boost_union');
@@ -645,6 +674,435 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
 
         // Add tab to settings page.
         $page->add($tab);
+
+        // Begin DBN Update.
+        // Create static pages tab.
+        $tab = new admin_settingpage('theme_boost_union_content_iconnavbar',
+                get_string('iconnavbartab', 'theme_boost_union', null, true));
+
+        // This is the descriptor for the page.
+        $name = 'theme_boost_union/iconnavinfo';
+        $heading = get_string('iconnavinfo', 'theme_boost_union');
+        $information = get_string('iconnavinfo_desc', 'theme_boost_union');
+        $setting = new admin_setting_heading($name, $heading, $information);
+        $tab->add($setting);
+        
+        // This is the descriptor for teacher create a course
+        $name = 'theme_boost_union/createinfo';
+        $heading = get_string('createinfo', 'theme_boost_union');
+        $information = get_string('createinfodesc', 'theme_boost_union');
+        $setting = new admin_setting_heading($name, $heading, $information);
+        $tab->add($setting);
+
+        // Creator Icon
+        $name = 'theme_boost_union/createicon';
+        $title = get_string('navicon', 'theme_boost_union');
+        $description = get_string('navicondesc', 'theme_boost_union');
+        $default = 'edit';
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/createbuttontext';
+        $title = get_string('naviconbuttontext', 'theme_boost_union');
+        $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+        $default = get_string('naviconbuttoncreatetextdefault', 'theme_boost_union');
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/createbuttonurl';
+        $title = get_string('naviconbuttonurl', 'theme_boost_union');
+        $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+        $default =  $CFG->wwwroot.'/course/edit.php?category=1';
+        $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+
+        // This is the descriptor for teacher create a course
+        $name = 'theme_boost_union/sliderinfo';
+        $heading = get_string('sliderinfo', 'theme_boost_union');
+        $information = get_string('sliderinfodesc', 'theme_boost_union');
+        $setting = new admin_setting_heading($name, $heading, $information);
+        $tab->add($setting);
+
+        // Creator Icon
+        $name = 'theme_boost_union/slideicon';
+        $title = get_string('navicon', 'theme_boost_union');
+        $description = get_string('naviconslidedesc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/slideiconbuttontext';
+        $title = get_string('naviconbuttontext', 'theme_boost_union');
+        $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // Slide Textbox.
+        $name = 'theme_boost_union/slidetextbox';
+            $title = get_string('slidetextbox', 'theme_boost_union');
+            $description = get_string('slidetextbox_desc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_confightmleditor($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+
+
+            // This is the descriptor for icon One
+            $name = 'theme_boost_union/navicon1info';
+            $heading = get_string('navicon1', 'theme_boost_union');
+            $information = get_string('navicondesc', 'theme_boost_union');
+            $setting = new admin_setting_heading($name, $heading, $information);
+            $tab->add($setting);
+
+            // icon One
+            $name = 'theme_boost_union/nav1icon';
+            $title = get_string('navicon', 'theme_boost_union');
+            $description = get_string('navicondesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav1buttontext';
+            $title = get_string('naviconbuttontext', 'theme_boost_union');
+            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav1buttonurl';
+            $title = get_string('naviconbuttonurl', 'theme_boost_union');
+            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav1target';
+            $title = get_string('marketingurltarget' , 'theme_boost_union');
+            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+            $default = 'target1';
+            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            // This is the descriptor for icon One
+            $name = 'theme_boost_union/navicon2info';
+            $heading = get_string('navicon2', 'theme_boost_union');
+            $information = get_string('navicondesc', 'theme_boost_union');
+            $setting = new admin_setting_heading($name, $heading, $information);
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav2icon';
+            $title = get_string('navicon', 'theme_boost_union');
+            $description = get_string('navicondesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav2buttontext';
+            $title = get_string('naviconbuttontext', 'theme_boost_union');
+            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav2buttonurl';
+            $title = get_string('naviconbuttonurl', 'theme_boost_union');
+            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav2target';
+            $title = get_string('marketingurltarget' , 'theme_boost_union');
+            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+            $default = 'target1';
+            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            // This is the descriptor for icon three
+            $name = 'theme_boost_union/navicon3info';
+            $heading = get_string('navicon3', 'theme_boost_union');
+            $information = get_string('navicondesc', 'theme_boost_union');
+            $setting = new admin_setting_heading($name, $heading, $information);
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav3icon';
+            $title = get_string('navicon', 'theme_boost_union');
+            $description = get_string('navicondesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav3buttontext';
+            $title = get_string('naviconbuttontext', 'theme_boost_union');
+            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav3buttonurl';
+            $title = get_string('naviconbuttonurl', 'theme_boost_union');
+            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav3target';
+            $title = get_string('marketingurltarget' , 'theme_boost_union');
+            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+            $default = 'target1';
+            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            // This is the descriptor for icon four
+            $name = 'theme_boost_union/navicon4info';
+            $heading = get_string('navicon4', 'theme_boost_union');
+            $information = get_string('navicondesc', 'theme_boost_union');
+            $setting = new admin_setting_heading($name, $heading, $information);
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav4icon';
+            $title = get_string('navicon', 'theme_boost_union');
+            $description = get_string('navicondesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav4buttontext';
+            $title = get_string('naviconbuttontext', 'theme_boost_union');
+            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav4buttonurl';
+            $title = get_string('naviconbuttonurl', 'theme_boost_union');
+            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+            $default =  '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav4target';
+            $title = get_string('marketingurltarget' , 'theme_boost_union');
+            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+            $default = 'target1';
+            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            // This is the descriptor for icon four
+            $name = 'theme_boost_union/navicon5info';
+            $heading = get_string('navicon5', 'theme_boost_union');
+            $information = get_string('navicondesc', 'theme_boost_union');
+            $setting = new admin_setting_heading($name, $heading, $information);
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav5icon';
+            $title = get_string('navicon', 'theme_boost_union');
+            $description = get_string('navicondesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav5buttontext';
+            $title = get_string('naviconbuttontext', 'theme_boost_union');
+            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav5buttonurl';
+            $title = get_string('naviconbuttonurl', 'theme_boost_union');
+            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav5target';
+            $title = get_string('marketingurltarget' , 'theme_boost_union');
+            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+            $default = 'target1';
+            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            // This is the descriptor for icon six
+            $name = 'theme_boost_union/navicon6info';
+            $heading = get_string('navicon6', 'theme_boost_union');
+            $information = get_string('navicondesc', 'theme_boost_union');
+            $setting = new admin_setting_heading($name, $heading, $information);
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav6icon';
+            $title = get_string('navicon', 'theme_boost_union');
+            $description = get_string('navicondesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav6buttontext';
+            $title = get_string('naviconbuttontext', 'theme_boost_union');
+            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav6buttonurl';
+            $title = get_string('naviconbuttonurl', 'theme_boost_union');
+            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav6target';
+            $title = get_string('marketingurltarget' , 'theme_boost_union');
+            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+            $default = 'target1';
+            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            // This is the descriptor for icon seven
+            $name = 'theme_boost_union/navicon7info';
+            $heading = get_string('navicon7', 'theme_boost_union');
+            $information = get_string('navicondesc', 'theme_boost_union');
+            $setting = new admin_setting_heading($name, $heading, $information);
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav7icon';
+            $title = get_string('navicon', 'theme_boost_union');
+            $description = get_string('navicondesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav7buttontext';
+            $title = get_string('naviconbuttontext', 'theme_boost_union');
+            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, $default);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav7buttonurl';
+            $title = get_string('naviconbuttonurl', 'theme_boost_union');
+            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+            $default = '';
+            $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+            $name = 'theme_boost_union/nav7target';
+            $title = get_string('marketingurltarget' , 'theme_boost_union');
+            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+            $default = 'target1';
+            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+            $setting->set_updatedcallback('theme_reset_all_caches');
+            $tab->add($setting);
+
+        // This is the descriptor for icon eight
+        $name = 'theme_boost_union/navicon8info';
+        $heading = get_string('navicon8', 'theme_boost_union');
+        $information = get_string('navicondesc', 'theme_boost_union');
+        $setting = new admin_setting_heading($name, $heading, $information);
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/nav8icon';
+        $title = get_string('navicon', 'theme_boost_union');
+        $description = get_string('navicondesc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/nav8buttontext';
+        $title = get_string('naviconbuttontext', 'theme_boost_union');
+        $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/nav8buttonurl';
+        $title = get_string('naviconbuttonurl', 'theme_boost_union');
+        $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        $name = 'theme_boost_union/nav8target';
+        $title = get_string('marketingurltarget' , 'theme_boost_union');
+        $description = get_string('marketingurltargetdesc', 'theme_boost_union');
+        $target1 = get_string('marketingurltargetself', 'theme_boost_union');
+        $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
+        $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
+        $default = 'target1';
+        $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
+        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // Add tab to settings page.
+        $page->add($tab);
+        // End DBN Update.
 
 
         // Create E_Mail branding tab.
@@ -931,6 +1389,90 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
             $setting = new admin_setting_description($name, $title, $description);
             $tab->add($setting);
         }
+
+        // Add tab to settings page.
+        $page->add($tab);
+
+
+        // Create H5P tab.
+        $tab = new admin_settingpage('theme_boost_union_look_h5p',
+                get_string('h5ptab', 'theme_boost_union', null, true));
+
+        // Create Raw CSS for H5P heading.
+        $name = 'theme_boost_union/cssh5pheading';
+        $title = get_string('cssh5pheading', 'theme_boost_union', null, true);
+        $setting = new admin_setting_heading($name, $title, null);
+        $tab->add($setting);
+
+        // Setting: Raw CSS for H5P.
+        $name = 'theme_boost_union/cssh5p';
+        $title = get_string('cssh5psetting', 'theme_boost_union', null, true);
+        $description = get_string('cssh5psetting_desc', 'theme_boost_union', null, true);
+        $default = '';
+        $setting = new admin_setting_scsscode($name, $title, $description, $default, PARAM_RAW);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // Create content bank width heading.
+        $name = 'theme_boost_union/contentwidthheading';
+        $title = get_string('contentwidthheading', 'theme_boost_union', null, true);
+        $setting = new admin_setting_heading($name, $title, null);
+        $tab->add($setting);
+
+        // Setting: H5P content bank max width.
+        $name = 'theme_boost_union/h5pcontentmaxwidth';
+        $title = get_string('h5pcontentmaxwidthsetting', 'theme_boost_union', null, true);
+        $description = get_string('h5pcontentmaxwidthsetting_desc', 'theme_boost_union', null, true);
+        $default = '960px';
+        $setting = new admin_setting_configtext($name, $title, $description, $default, $widthregex, 6);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // Add tab to settings page.
+        $page->add($tab);
+
+
+        // Create mobile app tab.
+        $tab = new admin_settingpage('theme_boost_union_look_mobile',
+                get_string('mobiletab', 'theme_boost_union', null, true));
+
+        // Create Mobile appearance heading.
+        $name = 'theme_boost_union/mobileappearanceheading';
+        $title = get_string('mobileappearanceheading', 'theme_boost_union', null, true);
+        $setting = new admin_setting_heading($name, $title, null);
+        $tab->add($setting);
+
+        // Setting: Additional CSS for Mobile app.
+        $name = 'theme_boost_union/mobilescss';
+        $title = get_string('mobilecss', 'theme_boost_union', null, true);
+        $description = get_string('mobilecss_desc', 'theme_boost_union', null, true);
+        $mobilecssurl = new moodle_url('/admin/settings.php', array('section' => 'mobileappearance'));
+        // If another Mobile App CSS URL is set already (in the $CFG->mobilecssurl setting), we add a warning to the description.
+        if (isset($CFG->mobilecssurl) && !empty($CFG->mobilecssurl) &&
+                strpos($CFG->mobilecssurl, '/boost_union/mobile/styles.php') == false) {
+            $mobilescssnotification = new \core\output\notification(
+                    get_string('mobilecss_overwrite', 'theme_boost_union',
+                            array('url' => $mobilecssurl->out(), 'value' => $CFG->mobilecssurl)).' '.
+                    get_string('mobilecss_donotchange', 'theme_boost_union'),
+                    \core\output\notification::NOTIFY_WARNING);
+            $mobilescssnotification->set_show_closebutton(false);
+            $description .= $OUTPUT->render($mobilescssnotification);
+
+            // Otherwise, we just add a note to the description.
+        } else {
+            $mobilescssnotification = new \core\output\notification(
+                    get_string('mobilecss_set', 'theme_boost_union',
+                            array('url' => $mobilecssurl->out())).' '.
+                    get_string('mobilecss_donotchange', 'theme_boost_union'),
+                    \core\output\notification::NOTIFY_INFO);
+            $mobilescssnotification->set_show_closebutton(false);
+            $description .= $OUTPUT->render($mobilescssnotification);
+        }
+        // Using admin_setting_scsscode is not 100% right here as this setting does not support SCSS.
+        // However, is shouldn't harm if the CSS code is parsed by the setting.
+        $setting = new admin_setting_scsscode($name, $title, $description, '', PARAM_RAW);
+        $setting->set_updatedcallback('theme_boost_union_set_mobilecss_url');
+        $tab->add($setting);
 
         // Add tab to settings page.
         $page->add($tab);
@@ -1485,435 +2027,6 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
 
         // Add tab to settings page.
         $page->add($tab);
-
-        // Begin DBN Update.
-        // Create static pages tab.
-        $tab = new admin_settingpage('theme_boost_union_content_iconnavbar',
-                get_string('iconnavbartab', 'theme_boost_union', null, true));
-
-        // This is the descriptor for the page.
-        $name = 'theme_boost_union/iconnavinfo';
-        $heading = get_string('iconnavinfo', 'theme_boost_union');
-        $information = get_string('iconnavinfo_desc', 'theme_boost_union');
-        $setting = new admin_setting_heading($name, $heading, $information);
-        $tab->add($setting);
-        
-        // This is the descriptor for teacher create a course
-        $name = 'theme_boost_union/createinfo';
-        $heading = get_string('createinfo', 'theme_boost_union');
-        $information = get_string('createinfodesc', 'theme_boost_union');
-        $setting = new admin_setting_heading($name, $heading, $information);
-        $tab->add($setting);
-
-        // Creator Icon
-        $name = 'theme_boost_union/createicon';
-        $title = get_string('navicon', 'theme_boost_union');
-        $description = get_string('navicondesc', 'theme_boost_union');
-        $default = 'edit';
-        $setting = new admin_setting_configtext($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/createbuttontext';
-        $title = get_string('naviconbuttontext', 'theme_boost_union');
-        $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-        $default = get_string('naviconbuttoncreatetextdefault', 'theme_boost_union');
-        $setting = new admin_setting_configtext($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/createbuttonurl';
-        $title = get_string('naviconbuttonurl', 'theme_boost_union');
-        $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-        $default =  $CFG->wwwroot.'/course/edit.php?category=1';
-        $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-
-        // This is the descriptor for teacher create a course
-        $name = 'theme_boost_union/sliderinfo';
-        $heading = get_string('sliderinfo', 'theme_boost_union');
-        $information = get_string('sliderinfodesc', 'theme_boost_union');
-        $setting = new admin_setting_heading($name, $heading, $information);
-        $tab->add($setting);
-
-        // Creator Icon
-        $name = 'theme_boost_union/slideicon';
-        $title = get_string('navicon', 'theme_boost_union');
-        $description = get_string('naviconslidedesc', 'theme_boost_union');
-        $default = '';
-        $setting = new admin_setting_configtext($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/slideiconbuttontext';
-        $title = get_string('naviconbuttontext', 'theme_boost_union');
-        $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-        $default = '';
-        $setting = new admin_setting_configtext($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        // Slide Textbox.
-        $name = 'theme_boost_union/slidetextbox';
-            $title = get_string('slidetextbox', 'theme_boost_union');
-            $description = get_string('slidetextbox_desc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_confightmleditor($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-
-
-            // This is the descriptor for icon One
-            $name = 'theme_boost_union/navicon1info';
-            $heading = get_string('navicon1', 'theme_boost_union');
-            $information = get_string('navicondesc', 'theme_boost_union');
-            $setting = new admin_setting_heading($name, $heading, $information);
-            $tab->add($setting);
-
-            // icon One
-            $name = 'theme_boost_union/nav1icon';
-            $title = get_string('navicon', 'theme_boost_union');
-            $description = get_string('navicondesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav1buttontext';
-            $title = get_string('naviconbuttontext', 'theme_boost_union');
-            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav1buttonurl';
-            $title = get_string('naviconbuttonurl', 'theme_boost_union');
-            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav1target';
-            $title = get_string('marketingurltarget' , 'theme_boost_union');
-            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-            $default = 'target1';
-            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            // This is the descriptor for icon One
-            $name = 'theme_boost_union/navicon2info';
-            $heading = get_string('navicon2', 'theme_boost_union');
-            $information = get_string('navicondesc', 'theme_boost_union');
-            $setting = new admin_setting_heading($name, $heading, $information);
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav2icon';
-            $title = get_string('navicon', 'theme_boost_union');
-            $description = get_string('navicondesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav2buttontext';
-            $title = get_string('naviconbuttontext', 'theme_boost_union');
-            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav2buttonurl';
-            $title = get_string('naviconbuttonurl', 'theme_boost_union');
-            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav2target';
-            $title = get_string('marketingurltarget' , 'theme_boost_union');
-            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-            $default = 'target1';
-            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            // This is the descriptor for icon three
-            $name = 'theme_boost_union/navicon3info';
-            $heading = get_string('navicon3', 'theme_boost_union');
-            $information = get_string('navicondesc', 'theme_boost_union');
-            $setting = new admin_setting_heading($name, $heading, $information);
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav3icon';
-            $title = get_string('navicon', 'theme_boost_union');
-            $description = get_string('navicondesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav3buttontext';
-            $title = get_string('naviconbuttontext', 'theme_boost_union');
-            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav3buttonurl';
-            $title = get_string('naviconbuttonurl', 'theme_boost_union');
-            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav3target';
-            $title = get_string('marketingurltarget' , 'theme_boost_union');
-            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-            $default = 'target1';
-            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            // This is the descriptor for icon four
-            $name = 'theme_boost_union/navicon4info';
-            $heading = get_string('navicon4', 'theme_boost_union');
-            $information = get_string('navicondesc', 'theme_boost_union');
-            $setting = new admin_setting_heading($name, $heading, $information);
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav4icon';
-            $title = get_string('navicon', 'theme_boost_union');
-            $description = get_string('navicondesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav4buttontext';
-            $title = get_string('naviconbuttontext', 'theme_boost_union');
-            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav4buttonurl';
-            $title = get_string('naviconbuttonurl', 'theme_boost_union');
-            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default =  '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_URL);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav4target';
-            $title = get_string('marketingurltarget' , 'theme_boost_union');
-            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-            $default = 'target1';
-            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            // This is the descriptor for icon four
-            $name = 'theme_boost_union/navicon5info';
-            $heading = get_string('navicon5', 'theme_boost_union');
-            $information = get_string('navicondesc', 'theme_boost_union');
-            $setting = new admin_setting_heading($name, $heading, $information);
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav5icon';
-            $title = get_string('navicon', 'theme_boost_union');
-            $description = get_string('navicondesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav5buttontext';
-            $title = get_string('naviconbuttontext', 'theme_boost_union');
-            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav5buttonurl';
-            $title = get_string('naviconbuttonurl', 'theme_boost_union');
-            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav5target';
-            $title = get_string('marketingurltarget' , 'theme_boost_union');
-            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-            $default = 'target1';
-            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            // This is the descriptor for icon six
-            $name = 'theme_boost_union/navicon6info';
-            $heading = get_string('navicon6', 'theme_boost_union');
-            $information = get_string('navicondesc', 'theme_boost_union');
-            $setting = new admin_setting_heading($name, $heading, $information);
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav6icon';
-            $title = get_string('navicon', 'theme_boost_union');
-            $description = get_string('navicondesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav6buttontext';
-            $title = get_string('naviconbuttontext', 'theme_boost_union');
-            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav6buttonurl';
-            $title = get_string('naviconbuttonurl', 'theme_boost_union');
-            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav6target';
-            $title = get_string('marketingurltarget' , 'theme_boost_union');
-            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-            $default = 'target1';
-            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            // This is the descriptor for icon seven
-            $name = 'theme_boost_union/navicon7info';
-            $heading = get_string('navicon7', 'theme_boost_union');
-            $information = get_string('navicondesc', 'theme_boost_union');
-            $setting = new admin_setting_heading($name, $heading, $information);
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav7icon';
-            $title = get_string('navicon', 'theme_boost_union');
-            $description = get_string('navicondesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav7buttontext';
-            $title = get_string('naviconbuttontext', 'theme_boost_union');
-            $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, $default);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav7buttonurl';
-            $title = get_string('naviconbuttonurl', 'theme_boost_union');
-            $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-            $default = '';
-            $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-            $name = 'theme_boost_union/nav7target';
-            $title = get_string('marketingurltarget' , 'theme_boost_union');
-            $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-            $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-            $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-            $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-            $default = 'target1';
-            $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-            $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-            $setting->set_updatedcallback('theme_reset_all_caches');
-            $tab->add($setting);
-
-        // This is the descriptor for icon eight
-        $name = 'theme_boost_union/navicon8info';
-        $heading = get_string('navicon8', 'theme_boost_union');
-        $information = get_string('navicondesc', 'theme_boost_union');
-        $setting = new admin_setting_heading($name, $heading, $information);
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/nav8icon';
-        $title = get_string('navicon', 'theme_boost_union');
-        $description = get_string('navicondesc', 'theme_boost_union');
-        $default = '';
-        $setting = new admin_setting_configtext($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/nav8buttontext';
-        $title = get_string('naviconbuttontext', 'theme_boost_union');
-        $description = get_string('naviconbuttontextdesc', 'theme_boost_union');
-        $default = '';
-        $setting = new admin_setting_configtext($name, $title, $description, $default);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/nav8buttonurl';
-        $title = get_string('naviconbuttonurl', 'theme_boost_union');
-        $description = get_string('naviconbuttonurldesc', 'theme_boost_union');
-        $default = '';
-        $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_URL);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/nav8target';
-        $title = get_string('marketingurltarget' , 'theme_boost_union');
-        $description = get_string('marketingurltargetdesc', 'theme_boost_union');
-        $target1 = get_string('marketingurltargetself', 'theme_boost_union');
-        $target2 = get_string('marketingurltargetnew', 'theme_boost_union');
-        $target3 = get_string('marketingurltargetparent', 'theme_boost_union');
-        $default = 'target1';
-        $choices = array('_self'=>$target1, '_blank'=>$target2, '_parent'=>$target3);
-        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        // Add tab to settings page.
-        $page->add($tab);
-        // End DBN Update.
 
 
         // Add settings page to the admin settings category.

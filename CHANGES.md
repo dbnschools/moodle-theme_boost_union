@@ -4,8 +4,31 @@ moodle-theme_boost_union
 Changes
 -------
 
-### Unreleased
+### v4.1-r2
 
+* 2023-02-12 - Feature: Enable admins to upload css code for mod_h5p and mod_hvp, solves #166 #207.
+* 2023-02-12 - Cleanup: Change the "Advanced settings" tab to "SCSS", solves #226.
+* 2023-02-12 - Cleanup: Create a dedicated "H5P" tab, solves #227.
+* 2023-02-11 - Cleanup: Course related hints feature was handled twice in drawers.php, solves #223.
+* 2023-02-11 - Improvement: Remove the 'no.' suffix from the info banners and tiles, solves #203.
+* 2023-02-10 - Bugfix: Align horizontal margins for the info banners, solves #218.
+* 2023-02-09 - Bugfix: Fix svg logo display problem in Firefox, solves #160.
+
+### v4.1-r1
+
+* 2023-02-04 - Upgrade: Persist the dedicated favicon setting in Boost Union even though Moodle core has a favicon setting in 4.1 as well, solves #78.
+* 2023-02-04 - Upgrade: The back-top-top button must respect the presence of the new sticky footer, solves #186.
+* 2023-02-04 - Upgrade: Add .footer-support-link class to Boost Union's footer links to align them with Boost Core in 4.1 again
+* 2023-02-04 - Upgrade: Allow the admin to change medium width pages which were introduced for the database activity in 4.1 as well.
+* 2023-02-04 - Upgrade: Adopt upstream changes in footer.mustache
+* 2023-02-04 - Upgrade: Fix Behat tests which broke with Moodle 4.1.
+* 2023-02-04 - Prepare compatibility for Moodle 4.1.
+
+### v4.0-r12
+
+* 2023-01-30 - Feature: Allow the admin to set CSS rules for the Moodle Mobile App, solves #195.
+* 2023-01-28 - Improvement: Do not resize SVG logo files during serving, helps to solve #160.
+* 2023-01-26 - Feature: Add dedicated logo settings to Boost Union, solves #211.
 * 2023-01-22 - Feature: Allow the admin to change the H5P content bank width, solves #201.
 
 ### v4.0-r11

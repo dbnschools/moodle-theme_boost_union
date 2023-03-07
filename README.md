@@ -1,7 +1,7 @@
 moodle-theme_boost_union
 ========================
 
-[![Moodle Plugin CI](https://github.com/moodle-an-hochschulen/moodle-theme_boost_union/workflows/Moodle%20Plugin%20CI/badge.svg?branch=master)](https://github.com/moodle-an-hochschulen/moodle-theme_boost_union/actions?query=workflow%3A%22Moodle+Plugin+CI%22+branch%3Amaster)
+[![Moodle Plugin CI](https://github.com/moodle-an-hochschulen/moodle-theme_boost_union/workflows/Moodle%20Plugin%20CI/badge.svg?branch=MOODLE_401_STABLE)](https://github.com/moodle-an-hochschulen/moodle-theme_boost_union/actions?query=workflow%3A%22Moodle+Plugin+CI%22+branch%3AMOODLE_401_STABLE)
 
 Theme Boost Union is an enhanced child theme of Boost which is intended, on the one hand, to make Boost simply more configurable and, on the other hand, to provide helpful additional features for the daily Moodle operation of admins, teachers and students.
 
@@ -64,7 +64,7 @@ This setting is already available in the Moodle core theme Boost. For more infor
 This setting is already available in the Moodle core theme Boost. For more information how to use it, please have a look at the official Moodle documentation: http://docs.moodle.org/en/Boost_theme
 Please note: This will not override the setting "theme_boost_campus | loginbackgroundimage" which means that the pictures uploaded to the login page background will be displayed anyway.
 
-#### Tab "Advanced settings"
+#### Tab "SCSS"
 
 In this tab there are the following settings:
 
@@ -88,21 +88,29 @@ In this tab there are the following settings:
 
 With this setting, you can override Moodle's course content width without manual SCSS modifications.
 
-##### Content width
+###### Medium content max width
 
-###### H5P content bank max width
-
-With this setting, you can override Moodle's H5P content bank width without manual SCSS modifications.
+With this setting, you can override Moodle's default medium width without manual SCSS modifications.
 
 #### Tab "Branding"
 
 In this tab there are the following settings:
 
+##### Logos
+
+###### Logo
+
+Here, you can upload a full logo to be used as decoration. This image is especially used on the login page. This image can be quite high resolution because it will be scaled down for use.
+
+###### Compact logo
+
+Here, you can upload a compact version of the same logo as above, such as an emblem, shield or icon. This image is especially used in the navigation bar at the top of each Moodle page. The image should be clear even at small sizes.
+
 ##### Favicon
 
 ###### Favicon
 
-Here, you can upload a custom image (.ico or .png format) that the browser will show as the favicon of your Moodle website. If no custom favicon is uploaded, a standard Moodle favicon will be used.
+Here, you can upload a custom image that the browser will show as the favicon of your Moodle website. If no custom favicon is uploaded, a standard Moodle favicon will be used.
 
 ##### Background images
 
@@ -197,6 +205,28 @@ With this setting you can upload custom fonts to the theme. The advantage of upl
 ##### FontAwesome
 
 Moodle core ships with FontAwesome 4 icons which are fine, but FontAwesome has evolved since then. If you want to use more recent FontAwesome icons, you can do this with this setting. As soon as you choose another version than FontAwesome 4, additional settings will appear where you can upload more recent FontAwesome versions.
+
+#### Tab "H5P"
+
+##### Raw CSS for H5P
+
+###### Raw CSS for H5P
+
+Use this field to provide CSS code which will be applied to the presentation of H5P content by mod_h5p and mod_hvp. Please inspect the H5P content types to find the necessary CSS selectors.
+
+##### Content width
+
+###### H5P content bank max width
+
+With this setting, you can override Moodle's H5P content bank width without manual SCSS modifications.
+
+#### Tab "Mobile app"
+
+##### Mobile appearance 
+
+###### Additional CSS for Mobile app
+
+With this setting, you can write custom CSS code to customise your mobile app interface. The CSS code will be only added to the Mobile app depiction of this Moodle instance and will not be shown in the webbrowser version.
 
 ### Settings page "Feel"
 
@@ -431,10 +461,12 @@ Moodle an Hochschulen e.V. would like to thank these main contributors (in alpha
 * Bern University of Applied Sciences (BFH), Luca Bösch: Code, Peer Review, Ideating
 * Käferfreie Software, Nina Herrmann: Code
 * lern.link GmbH, Alexander Bias: Code, Peer Review, Ideating, Funding
+* lern.link GmbH, Beata Waloszczyk: Code
 * Lower Saxony (Federal state of Germany): Funding
 * moodleSCHULE e.V., Ralf Krause: German translation and curation
 * Ruhr University Bochum, Melanie Treitinger: Code
 * RWTH Aachen, Josha Bartsch: Code
+* University of Graz, André Menrath: Code
 * University of Lübeck, Christian Wolters: Peer Review, Ideating
 * Zurich University of Applied Sciences (ZHAW): Funding
 

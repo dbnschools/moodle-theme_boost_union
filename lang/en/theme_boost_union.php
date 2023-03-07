@@ -36,7 +36,8 @@ $string['configtitlelook'] = 'Look';
 // ... Section: Theme presets.
 $string['presetheading'] = 'Theme presets';
 
-// Settings: Advances settings tab.
+// Settings: SCSS tab.
+$string['scsstab'] = 'SCSS';
 // ... Section: Raw SCSS.
 $string['scssheading'] = 'Raw SCSS';
 
@@ -47,16 +48,24 @@ $string['pagewidthheading'] = 'Page width';
 // ... ... Setting: Course content max width.
 $string['coursecontentmaxwidthsetting'] = 'Course content max width';
 $string['coursecontentmaxwidthsetting_desc'] = 'With this setting, you can override Moodle\'s course content width without manual SCSS modifications. This width is used as page width of course pages and within several activities. By default, Moodle uses a course content max width of 830px. You can enter other pixel-based values like 1200px, but you can also enter a percentage-based value like 100% or a viewport-width value like 90vw.';
-// ... Section: Content width.
-$string['contentwidthheading'] = 'Content width';
-// ... ... Setting: H5P content bank max width.
-$string['h5pcontentmaxwidthsetting'] = 'H5P content bank max width';
-$string['h5pcontentmaxwidthsetting_desc'] = 'With this setting, you can override Moodle\'s H5P content bank width without manual SCSS modifications. This width is used for the H5P editor within the content bank. It is <em>not</em> used for the width of the H5P activity. By default, Moodle uses a H5P content bank max width of 960px. You can enter other pixel-based values like 1200px, but you can also enter a percentage-based value like 100% or a viewport-width value like 90vw.';
+// ... ... Setting: Medium content max width.
+$string['mediumcontentmaxwidthsetting'] = 'Medium content max width';
+$string['mediumcontentmaxwidthsetting_desc'] = 'With this setting, you can override Moodle\'s medium content width without manual SCSS modifications. This page width is used in certain activities like the database activity. By default, Moodle uses a medium content max width of 1120px. You can enter other pixel-based values like 1200px, but you can also enter a percentage-based value like 100% or a viewport-width value like 90vw.';
 
 // Settings: Branding tab.
 $string['brandingtab'] = 'Branding';
+// ... Section: Logos.
+$string['logosheading'] = 'Logos';
+$string['logosheading_desc'] = 'Please note: Boost Union has its own logo upload and does not use the logo from <a href="{$a}">Moodle core\'s logo setting</a>.<br />Boost Union especially allows you to upload more image formats that Moodle core allows and allows you to override the uploaded logos within its flavours.';
+// ... ... Setting: Logo.
+$string['logosetting'] = 'Logo';
+$string['logosetting_desc'] = 'Here, you can upload a full logo to be used as decoration. This image is especially used on the login page. This image can be quite high resolution because it will be scaled down for use.';
+// ... ... Setting: Compact logo.
+$string['logocompactsetting'] = 'Compact logo';
+$string['logocompactsetting_desc'] = 'Here, you can upload a compact version of the same logo as above, such as an emblem, shield or icon. This image is especially used in the navigation bar at the top of each Moodle page. The image should be clear even at small sizes.';
 // ... Section: Favicon.
 $string['faviconheading'] = 'Favicon';
+$string['faviconheading_desc'] = 'Please note: Boost Union has its own favicon upload and does not use the favicon from <a href="{$a}">Moodle core\'s favicon setting</a>.<br />Boost Union especially allows you to override the uploaded favicon within its flavours.';
 // ... ... Setting: Favicon
 $string['faviconsetting'] = 'Favicon';
 $string['faviconsetting_desc'] = 'Here, you can upload a custom image (.ico or .png format) that the browser will show as the favicon of your Moodle website. If no custom favicon is uploaded, a standard Moodle favicon will be used.';
@@ -261,6 +270,30 @@ $string['fontawesomecheck-fa6free-newstuff-description'] = 'Newer FontAwesome ve
 $string['fontawesomecheck-fa6free-filter-title'] = 'FontAwesome filter';
 $string['fontawesomecheck-fa6free-filter-description'] = 'As you have the FontAwesome filter plugin installed, you should be sure that the filter handles the new FontAwesome 6 icons correctly as well. If you see a users icon on the left hand side, the filter is working properly with the FontAwesome 6 version icons.';
 
+// Settings: H5P tab.
+$string['h5ptab'] = 'H5P';
+// ... Section: Raw CSS for H5P.
+$string['cssh5pheading'] = 'Raw CSS for H5P';
+// ... ... Setting: Raw CSS for H5P.
+$string['cssh5psetting'] = 'Raw CSS for H5P';
+$string['cssh5psetting_desc'] = 'Use this field to provide CSS code which will be applied to the presentation of H5P content by mod_h5p and mod_hvp. Please inspect the H5P content types to find the necessary CSS selectors.';
+// ... Section: Content width.
+$string['contentwidthheading'] = 'Content width';
+// ... ... Setting: H5P content bank max width.
+$string['h5pcontentmaxwidthsetting'] = 'H5P content bank max width';
+$string['h5pcontentmaxwidthsetting_desc'] = 'With this setting, you can override Moodle\'s H5P content bank width without manual SCSS modifications. This width is used for the H5P editor within the content bank. It is <em>not</em> used for the width of the H5P activity. By default, Moodle uses a H5P content bank max width of 960px. You can enter other pixel-based values like 1200px, but you can also enter a percentage-based value like 100% or a viewport-width value like 90vw.';
+
+// Settings: Mobile app tab.
+$string['mobiletab'] = 'Mobile app';
+// ... Section: Mobile appearance.
+$string['mobileappearanceheading'] = 'Mobile appearance';
+// ... ... Setting: Additional CSS for Mobile app.
+$string['mobilecss'] = 'Additional CSS for Mobile app';
+$string['mobilecss_desc'] = 'With this setting, you can write custom CSS code to customise your mobile app interface. The CSS code will be only added to the Mobile app depiction of this Moodle instance and will not be shown in the webbrowser version. Read more about this feature in the <a href="https://moodledev.io/general/app/customisation/remote-themes#how-do-remote-themes-work">Moodle dev docs</a>.';
+$string['mobilecss_set'] = 'As soon as you add any CSS code to this setting and save the setting, the <a href="{$a->url}">Moodle core setting <em>mobilecssurl</em></a> will be automatically set to a URL of the Boost Union theme.';
+$string['mobilecss_overwrite'] = 'As soon as you add any CSS code to this setting and save the setting, the <a href="{$a->url}">Moodle core setting <em>mobilecssurl</em></a> will be automatically overwritten with a URL of the Boost Union theme. Currently this setting is set to <a href="{$a->value}">{$a->value}</a>.';
+$string['mobilecss_donotchange'] = 'This step is necessary to ship the CSS code to the Mobile app. Do not change the URL there unless you really want to remove the CSS code from the Mobile app again.';
+
 // Settings: Feel page.
 $string['configtitlefeel'] = 'Feel';
 
@@ -392,7 +425,7 @@ $string['maintenancelinkpositionsetting_desc'] = 'In this setting, you can confi
 // Settings: Info banners tab.
 $string['infobannertab'] = 'Info banner';
 // ... Section: Info banners.
-$string['infobannerheading'] = 'Info banner no. {$a->no}';
+$string['infobannerheading'] = 'Info banner {$a->no}';
 $string['infobannerpageloginpage'] = 'Login page';
 $string['infobannermodeperpetual'] = 'Perpetual';
 $string['infobannermodetimebased'] = 'Time controlled';
@@ -407,30 +440,29 @@ $string['bootstrapdarkcolor'] = 'Dark color';
 $string['bootstrapnone'] = 'No Bootstrap color';
 $string['infobannerclose'] = 'Close';
 $string['infobannerdismissreset'] = 'Reset visibility of dismissed info banner';
-$string['infobannerdismissresetbutton'] = 'Reset visibility of info banner no. {$a->no}';
-$string['infobannerdismissconfirm'] = 'Do you really want to reset the visibility of info banner no. {$a->no} and want to re-show it for all users who have dismissed it?';
-$string['infobannerdismisssuccess'] = 'The visibility of info banner no. {$a->no} has been reset';
-$string['infobannerdismissfail'] = 'The visibility reset of info banner no. {$a->no} has failed for at least one user';
+$string['infobannerdismissresetbutton'] = 'Reset visibility of info banner {$a->no}';
+$string['infobannerdismissconfirm'] = 'Do you really want to reset the visibility of info banner {$a->no} and want to re-show it for all users who have dismissed it?';
+$string['infobannerdismisssuccess'] = 'The visibility of info banner {$a->no} has been reset';
+$string['infobannerdismissfail'] = 'The visibility reset of info banner {$a->no} has failed for at least one user';
 $string['error:infobannerdismissnonotvalid'] = 'The given info banner number is not valid';
 $string['error:infobannerdismissnonotdismissible'] = 'The given info banner is not dismissible';
-$string['infobannerenabledsetting'] = 'Enable info banner no. {$a->no}';
-$string['infobannerenabledsetting_desc'] = 'With this setting, you can enable info banner no. {$a->no}.';
-$string['infobannercontentsetting'] = 'Info banner no. {$a->no} content';
-$string['infobannercontentsetting_desc'] = 'Here, you enter the information which should be shown within info banner no. {$a->no}.';
-$string['infobannerpagessetting'] = 'Page layouts to display info banner no. {$a->no} on';
-$string['infobannerpagessetting_desc'] = 'With this setting, you can select the page layouts on which info banner no. {$a->no} should be displayed.';
-$string['infobannerbsclasssetting'] = 'Info banner no. {$a->no} Bootstrap class';
-$string['infobannerbsclasssetting_desc'] = 'With this setting, you can select the Bootstrap style with which info banner no. {$a->no} should be displayed. If you choose the \'No Bootstrap color\' option, the info banner will be output without any particular Bootstrap color which gives you the freedom to style the banner yourself within the rich-text editor.';
-$string['infobannerordersetting'] = 'Info banner no. {$a->no} order position';
-$string['infobannerordersetting_desc'] = 'With this setting, you define the order position of info banner no. {$a->no}. By default, the info banners are ordered from top to bottom like you see them on this settings page here. However, you can decide to assign another order position with this setting. If you assign the same order position to two or more information banners, they will be ordered again according to the order on this settings page.';
-$string['infobannermodesetting'] = 'Info banner no. {$a->no} display mode';
-$string['infobannermodesetting_desc'] = 'With this setting, you can define if info banner no. {$a->no} should be a perpetual banner (which is always shown) or a time controlled banner (which is only shown within the configured time interval)';
-$string['infobannerdismissiblesetting'] = 'Info banner no. {$a->no} dismissible';
-$string['infobannerdismissiblesetting_desc'] = 'With this setting, you can make info banner no. {$a->no} dismissible. If the user clicks on the x-button in the info banner, the banner will be hidden for this user permanently. The visibility is not reset anyhow automatically, even if you change the content of the info banner. If you want to reset the visibility of the info banner, click the \'Reset visibility\' button below.';
-$string['infobannerstartsetting'] = 'Info banner no. {$a->no} start time';
-$string['infobannerstartsetting_desc'] = 'With this setting, you can define from when on info banner no. {$a->no} should be displayed. The configured time is interpreted as server time, not as user time.';
-$string['infobannerendsetting'] = 'Info banner no. {$a->no} end time';
-$string['infobannerendsetting_desc'] = 'With this setting, you can define until when info banner no. {$a->no} should be displayed. The configured time is interpreted as server time, not as user time.';
+$string['infobannerenabledsetting'] = 'Enable info banner {$a->no}';
+$string['infobannerenabledsetting_desc'] = 'With this setting, you can enable info banner {$a->no}.';
+$string['infobannercontentsetting'] = 'Info banner {$a->no} content';
+$string['infobannercontentsetting_desc'] = 'Here, you enter the information which should be shown within info banner {$a->no}.';
+$string['infobannerpagessetting'] = 'Page layouts to display info banner {$a->no} on';
+$string['infobannerpagessetting_desc'] = 'With this setting, you can select the page layouts on which info banner {$a->no} should be displayed.';
+$string['infobannerbsclasssetting'] = 'Info banner {$a->no} Bootstrap class';
+$string['infobannerbsclasssetting_desc'] = 'With this setting, you can select the Bootstrap style with which info banner {$a->no} should be displayed. If you choose the \'No Bootstrap color\' option, the info banner will be output without any particular Bootstrap color which gives you the freedom to style the banner yourself within the rich-text editor.';
+$string['infobannerordersetting'] = 'Info banner {$a->no} order position';
+$string['infobannerordersetting_desc'] = 'With this setting, you define the order position of info banner {$a->no}. By default, the info banners are ordered from top to bottom like you see them on this settings page here. However, you can decide to assign another order position with this setting. If you assign the same order position to two or more information banners, they will be ordered again according to the order on this settings page.';
+$string['infobannermodesetting'] = 'Info banner {$a->no} display mode';
+$string['infobannermodesetting_desc'] = 'With this setting, you can define if info banner {$a->no} should be a perpetual banner (which is always shown) or a time controlled banner (which is only shown within the configured time interval)';
+$string['infobannerdismissiblesetting'] = 'Info banner {$a->no} dismissible';
+$string['infobannerdismissiblesetting_desc'] = 'With this setting, you can make info banner {$a->no} dismissible. If the user clicks on the x-button in the info banner, the banner will be hidden for this user permanently. The visibility is not reset anyhow automatically, even if you change the content of the info banner. If you want to reset the visibility of the info banner, click the \'Reset visibility\' button below.';
+$string['infobannerstartsetting'] = 'Info banner {$a->no} start time';
+$string['infobannerstartsetting_desc'] = 'With this setting, you can define from when on info banner {$a->no} should be displayed. The configured time is interpreted as server time, not as user time.';$string['infobannerendsetting'] = 'Info banner {$a->no} end time';
+$string['infobannerendsetting_desc'] = 'With this setting, you can define until when info banner {$a->no} should be displayed. The configured time is interpreted as server time, not as user time.';
 
 // Settings: Functionality page.
 $string['configtitlefunctionality'] = 'Functionality';
@@ -497,9 +529,9 @@ $string['flavoursgeneralsettings'] = 'General settings';
 $string['flavoursincludesubcategories'] = 'Include subcategories';
 $string['flavoursincludesubcategories_help'] = 'If checked, the flavour will also be applied to the subcategories of the chosen categories.';
 $string['flavourslogo'] = 'Logo';
-$string['flavourslogo_help'] = 'With this setting, the flavour will override the logo which is configured in Moodle\'s global appearance settings.';
+$string['flavourslogo_help'] = 'With this setting, the flavour will override the logo which is configured in Boost Union\'s look settings.';
 $string['flavourslogocompact'] = 'Compact logo';
-$string['flavourslogocompact_help'] = 'With this setting, the flavour will override the logo which is configured in Moodle\'s global appearance settings.';
+$string['flavourslogocompact_help'] = 'With this setting, the flavour will override the logo which is configured in Boost Union\'s look settings.';
 $string['flavoursnotificationcreated'] = 'The flavour was created successfully';
 $string['flavoursnotificationdeleted'] = 'The flavour was deleted successfully';
 $string['flavoursnotificationedited'] = 'The flavour was edited successfully';
@@ -524,28 +556,28 @@ $string['tilefrontpagepositionsetting_after'] = 'After the site home content';
 $string['tileheightsetting'] = 'Advertisement tiles height';
 $string['tileheightsetting_desc'] = 'With this setting, you control the height of the advertisement tiles. The configured height is the minimum height of each tile. If a tile\'s content is higher than this configured height, the whole row of tiles will be automatically made higher as needed.';
 // ... Section: Advertisement tiles.
-$string['tileheading'] = 'Advertisement tile no. {$a->no}';
-$string['tilebackgroundimagepositionsetting'] = 'Advertisement tile no. {$a->no} background image position';
-$string['tilebackgroundimagepositionsetting_desc'] = 'With this setting, you control the positioning of the background image within the advertisement tile no. {$a->no} container. The first value is the horizontal position, the second value is the vertical position.';
-$string['tilebackgroundimagesetting'] = 'Advertisement tile no. {$a->no} background image';
-$string['tilebackgroundimagesetting_desc'] = 'Here, you can upload an image file which will be shown as background image behind the content of the advertisement tile no. {$a->no}. Please make sure or check that the content is still readable on the background image. This is an optional setting, the advertisement tile will work even if you do not upload any background image.';
-$string['tilecontentsetting'] = 'Advertisement tile no. {$a->no} content';
-$string['tilecontentsetting_desc'] = 'Here, you enter the content which should be displayed in the advertisement tile no. {$a->no}. The content is displayed in the middle of the tile. This is an optional setting, the advertisement tile will be shown even if you do not set any content.';
-$string['tileenabledsetting'] = 'Enable advertisement tile no. {$a->no}';
-$string['tileenabledsetting_desc'] = 'With this setting, you can enable advertisement tile no. {$a->no}.';
-$string['tilelinksetting'] = 'Advertisement tile no. {$a->no} link URL';
-$string['tilelinksetting_desc'] = 'Here, you can set a (Moodle-internal or external) URL which will be offered as link button at the end of the advertisement tile no. {$a->no}. This is an optional setting, the advertisement tile will work even if you do not set any link URL.';
+$string['tileheading'] = 'Advertisement tile {$a->no}';
+$string['tilebackgroundimagepositionsetting'] = 'Advertisement tile {$a->no} background image position';
+$string['tilebackgroundimagepositionsetting_desc'] = 'With this setting, you control the positioning of the background image within the advertisement tile {$a->no} container. The first value is the horizontal position, the second value is the vertical position.';
+$string['tilebackgroundimagesetting'] = 'Advertisement tile {$a->no} background image';
+$string['tilebackgroundimagesetting_desc'] = 'Here, you can upload an image file which will be shown as background image behind the content of the advertisement tile {$a->no}. Please make sure or check that the content is still readable on the background image. This is an optional setting, the advertisement tile will work even if you do not upload any background image.';
+$string['tilecontentsetting'] = 'Advertisement tile {$a->no} content';
+$string['tilecontentsetting_desc'] = 'Here, you enter the content which should be displayed in the advertisement tile {$a->no}. The content is displayed in the middle of the tile. This is an optional setting, the advertisement tile will be shown even if you do not set any content.';
+$string['tileenabledsetting'] = 'Enable advertisement tile {$a->no}';
+$string['tileenabledsetting_desc'] = 'With this setting, you can enable advertisement tile {$a->no}.';
+$string['tilelinksetting'] = 'Advertisement tile {$a->no} link URL';
+$string['tilelinksetting_desc'] = 'Here, you can set a (Moodle-internal or external) URL which will be offered as link button at the end of the advertisement tile {$a->no}. This is an optional setting, the advertisement tile will work even if you do not set any link URL.';
 $string['tilelinktitlefallback'] = 'Link';
-$string['tilelinktitlesetting'] = 'Advertisement tile no. {$a->no} link title';
-$string['tilelinktitlesetting_desc'] = 'Here, you can set a link title which is used as label of the link button as soon as you set a link URL in the advertisement tile no. {$a->no}. Please note that if you set a link URL but do not set a link title, the link button will just be labeled with \'Link\'.';
-$string['tilelinktargetsetting'] = 'Advertisement tile no. {$a->no} link target';
-$string['tilelinktargetsetting_desc'] = 'Here, you can set the link target which is set for the link button as soon as you set a link URL in the advertisement tile no. {$a->no}.';
+$string['tilelinktitlesetting'] = 'Advertisement tile {$a->no} link title';
+$string['tilelinktitlesetting_desc'] = 'Here, you can set a link title which is used as label of the link button as soon as you set a link URL in the advertisement tile {$a->no}. Please note that if you set a link URL but do not set a link title, the link button will just be labeled with \'Link\'.';
+$string['tilelinktargetsetting'] = 'Advertisement tile {$a->no} link target';
+$string['tilelinktargetsetting_desc'] = 'Here, you can set the link target which is set for the link button as soon as you set a link URL in the advertisement tile {$a->no}.';
 $string['tilelinktargetsetting_samewindow'] = 'Same window';
 $string['tilelinktargetsetting_newtab'] = 'New tab';
-$string['tileordersetting'] = 'Advertisement tile no. {$a->no} order position';
-$string['tileordersetting_desc'] = 'With this setting, you define the order position of the advertisement tile no. {$a->no}. By default, the advertisement tiles are ordered from top to bottom and left to right like you see them on this settings page here. However, you can decide to assign another order position with this setting. If you assign the same order position to two or more advertisement tiles, they will be ordered again according to the order on this settings page.';
-$string['tiletitlesetting'] = 'Advertisement tile no. {$a->no} title';
-$string['tiletitlesetting_desc'] = 'Here, you enter the title which should be displayed in the advertisement tile no. {$a->no}. This is an optional setting, the advertisement tile will be shown even if you do not set a title.';
+$string['tileordersetting'] = 'Advertisement tile {$a->no} order position';
+$string['tileordersetting_desc'] = 'With this setting, you define the order position of the advertisement tile {$a->no}. By default, the advertisement tiles are ordered from top to bottom and left to right like you see them on this settings page here. However, you can decide to assign another order position with this setting. If you assign the same order position to two or more advertisement tiles, they will be ordered again according to the order on this settings page.';
+$string['tiletitlesetting'] = 'Advertisement tile {$a->no} title';
+$string['tiletitlesetting_desc'] = 'Here, you enter the title which should be displayed in the advertisement tile {$a->no}. This is an optional setting, the advertisement tile will be shown even if you do not set a title.';
 
 // Privacy API.
 $string['privacy:metadata'] = 'The Boost Union theme does not store any personal data about any user.';
@@ -558,6 +590,13 @@ $string['boost_union:viewhintinhiddencourse'] = 'To be able to see a hint in a h
 // Caches.
 $string['cachedef_fontawesome'] = 'FontAwesome files (which are uploaded in the Boost Union settings)';
 $string['cachedef_flavours'] = 'Flavours which apply to a given page category ID for the current user';
+
+// Upgrade notices.
+$string['upgradenotice_2022080922'] = 'From this release on, Boost Union has its own logo and compact logo settings and does not use these files from the Moodle core settings anymore.';
+$string['upgradenotice_2022080922_logo'] = 'logo';
+$string['upgradenotice_2022080922_logocompact'] = 'compact logo';
+$string['upgradenotice_2022080922_copied'] = 'The existing <strong>{$a}</strong> from the Moodle core settings has been copied to the Boost Union {$a} setting during this upgrade. Please double-check the result.';
+$string['upgradenotice_2022080922_notcopied'] = 'The <strong>{$a}</strong> setting within Boost Union is empty now. If you want to use a {$a} within Boost Union from now on, just upload it into the Boost Union {$a} setting later.';
 
 
 // Begin DBN Update.

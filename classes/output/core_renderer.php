@@ -47,10 +47,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * This renderer function is copied and modified from /lib/outputrenderers.php
      *
      * It checks if the favicon is overridden in a flavour and, if yes, it serves this favicon.
-     * If there isn't a favicon in any flavour set, it continues with the logic from Moodle core.
-
-     * Doing this, it uses the same logic as Moodle 4.1 which introduces a Moodle core favicon setting,
-     * but picks the favicon from the theme_boost_union settings for the time being.
+     * If there isn't a favicon in any flavour set, it serves the general favicon.
      *
      * @since Moodle 2.5.1 2.6
      * @return moodle_url The moodle_url for the favicon
@@ -101,7 +98,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         }
 
-        // Apparently, there isn't any flavour favicon set. Let's continue with the logic adopted from Moodle 4.1 core.
+        // Apparently, there isn't any flavour favicon set. Let's continue with the logic to serve the general favicon.
         $logo = null;
         if (!during_initial_install()) {
             $logo = get_config('theme_boost_union', 'favicon');
@@ -111,7 +108,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
 
         // Use $CFG->themerev to prevent browser caching when the file changes.
-        return moodle_url::make_pluginfile_url(context_system::instance()->id, 'theme_boost_union', 'favicon', '',
+        return moodle_url::make_pluginfile_url(context_system::instance()->id, 'theme_boost_union', 'favicon', '64x64/',
                 theme_get_revision(), $logo);
     }
 
@@ -121,7 +118,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * This renderer function is copied and modified from /lib/outputrenderers.php
      *
      * It checks if the logo is overridden in a flavour and, if yes, it serves this logo.
-     * If there isn't a logo in any flavour set, it continues with the logic from Moodle core.
+     * If there isn't a logo in any flavour set, it serves the general logo.
      *
      * @param int $maxwidth The maximum width, or null when the maximum width does not matter.
      * @param int $maxheight The maximum height, or null when the maximum height does not matter.
@@ -172,8 +169,33 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         }
 
-        // Apparently, there isn't any flavour logo set. Let's continue with the logic from Moodle core.
-        return parent::get_logo_url($maxwidth, $maxheight);
+        // Apparently, there isn't any flavour logo set. Let's continue to serve the general logo.
+        $logo = get_config('theme_boost_union', 'logo');
+        if (empty($logo)) {
+            return false;
+        }
+
+        // If the logo is a SVG image, do not add a size to the path.
+        $logoextension = pathinfo($logo, PATHINFO_EXTENSION);
+        if (in_array($logoextension, ['svg', 'svgz'])) {
+            // The theme_boost_union_pluginfile() function will look for a filepath and will try to extract the size from that.
+            // Thus, we cannot drop the filepath from the URL completely.
+            // But we can add a path without an 'x' in it which will then be interpreted by theme_boost_union_pluginfile()
+            // as "no resize requested".
+            $filepath = '1/';
+
+            // Otherwise, add a size to the path.
+        } else {
+            // 200px high is the default image size which should be displayed at 100px in the page to account for retina displays.
+            // It's not worth the overhead of detecting and serving 2 different images based on the device.
+
+            // Hide the requested size in the file path.
+            $filepath = ((int) $maxwidth . 'x' . (int) $maxheight) . '/';
+        }
+
+        // Use $CFG->themerev to prevent browser caching when the file changes.
+        return moodle_url::make_pluginfile_url(context_system::instance()->id, 'theme_boost_union', 'logo', $filepath,
+                theme_get_revision(), $logo);
     }
 
     /**
@@ -182,7 +204,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
      * This renderer function is copied and modified from /lib/outputrenderers.php
      *
      * It checks if the logo is overridden in a flavour and, if yes, it serves this logo.
-     * If there isn't a logo in any flavour set, it continues with the logic from Moodle core.
+     * If there isn't a logo in any flavour set, it serves the general compact logo.
      *
      * @param int $maxwidth The maximum width, or null when the maximum width does not matter.
      * @param int $maxheight The maximum height, or null when the maximum height does not matter.
@@ -233,8 +255,30 @@ class core_renderer extends \theme_boost\output\core_renderer {
             }
         }
 
-        // Apparently, there isn't any flavour logo set. Let's continue with the logic from Moodle core.
-        return parent::get_compact_logo_url($maxwidth, $maxheight);
+        // Apparently, there isn't any flavour logo set. Let's continue to service the general compact logo.
+        $logo = get_config('theme_boost_union', 'logocompact');
+        if (empty($logo)) {
+            return false;
+        }
+
+        // If the logo is a SVG image, do not add a size to the path.
+        $logoextension = pathinfo($logo, PATHINFO_EXTENSION);
+        if (in_array($logoextension, ['svg', 'svgz'])) {
+            // The theme_boost_union_pluginfile() function will look for a filepath and will try to extract the size from that.
+            // Thus, we cannot drop the filepath from the URL completely.
+            // But we can add a path without an 'x' in it which will then be interpreted by theme_boost_union_pluginfile()
+            // as "no resize requested".
+            $filepath = '1/';
+
+            // Otherwise, add a size to the path.
+        } else {
+            // Hide the requested size in the file path.
+            $filepath = ((int)$maxwidth . 'x' . (int)$maxheight) . '/';
+        }
+
+        // Use $CFG->themerev to prevent browser caching when the file changes.
+        return moodle_url::make_pluginfile_url(context_system::instance()->id, 'theme_boost_union', 'logocompact', $filepath,
+                theme_get_revision(), $logo);
     }
 
     /**
@@ -299,8 +343,6 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function full_header() {
         //Begin DBN Update
         global $DB, $OUTPUT, $COURSE;
-        //global $PAGE, $COURSE, $CFG, $DB, $OUTPUT, $USER;
-
         $course = $this->page->course;
         $context = context_course::instance($course->id);
         $mycourses = get_string('latestcourses', 'theme_boost_union');
@@ -426,550 +468,549 @@ class core_renderer extends \theme_boost\output\core_renderer {
         }
         return $this->render_from_template('core/full_header', $header);
     }
+//Begin DBN Update Functions
 
-    //Begin DBN Update Functions
+public function enrolform() {
+    $enrolform = '';
+    $plugin = enrol_get_plugin('easy');
 
-    public function enrolform() {
-        $enrolform = '';
-        $plugin = enrol_get_plugin('easy');
+    if ($plugin && !isguestuser() && ($this->page->pagelayout == 'mydashboard' || $this->page->pagelayout == 'frontpage' || $this->page->pagelayout == 'mycourses')) {
 
-        if ($plugin && !isguestuser() && ($this->page->pagelayout == 'mydashboard' || $this->page->pagelayout == 'frontpage' || $this->page->pagelayout == 'mycourses')) {
-
-            $enrolform = '<div class="easyenrolform">';
-            $enrolform .= $plugin->get_form();
-            $enrolform .= '</div>';
-        }
-        return $enrolform;
+        $enrolform = '<div class="easyenrolform">';
+        $enrolform .= $plugin->get_form();
+        $enrolform .= '</div>';
     }
+    return $enrolform;
+}
 
-    public function courseprogressbar() {
-        global $PAGE;
-        $course = $this->page->course;
-        $context = context_course::instance($course->id);
-        $hasprogressbar = (empty($this->page->theme->settings->showprogressbar)) ? false : true;
-        $iscoursepage = $this->page->pagelayout == 'course';
+public function courseprogressbar() {
+    global $PAGE;
+    $course = $this->page->course;
+    $context = context_course::instance($course->id);
+    $hasprogressbar = (empty($this->page->theme->settings->showprogressbar)) ? false : true;
+    $iscoursepage = $this->page->pagelayout == 'course';
 
-        // Student Dash
-        if (\core_completion\progress::get_course_progress_percentage($PAGE->course)) {
-            $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course);
-            $comppercent = number_format($comppc, 0);
-        }
-        else {
-            $comppercent = 0;
-        }
-        $progresschartcontext = ['progress' => $comppercent, 'hasprogressbar' => $hasprogressbar, 'iscoursepage' => $iscoursepage];
-        $progress = $this->render_from_template('theme_boost_union/progress-bar', $progresschartcontext);
-
-        return $progress;
+    // Student Dash
+    if (\core_completion\progress::get_course_progress_percentage($PAGE->course)) {
+        $comppc = \core_completion\progress::get_course_progress_percentage($PAGE->course);
+        $comppercent = number_format($comppc, 0);
     }
+    else {
+        $comppercent = 0;
+    }
+    $progresschartcontext = ['progress' => $comppercent, 'hasprogressbar' => $hasprogressbar, 'iscoursepage' => $iscoursepage];
+    $progress = $this->render_from_template('theme_boost_union/progress-bar', $progresschartcontext);
+
+    return $progress;
+}
 
 // The following code is a copied work of the code from theme Essential https://moodle.org/plugins/theme_essential, @copyright Gareth J Barnard
-    protected static function timeaccesscompare($a, $b) {
-        // Timeaccess is lastaccess entry and timestart an enrol entry.
-        if ((!empty($a->timeaccess)) && (!empty($b->timeaccess))) {
-            // Both last access.
-            if ($a->timeaccess == $b->timeaccess) {
-                return 0;
-            }
-            return ($a->timeaccess > $b->timeaccess) ? -1 : 1;
+protected static function timeaccesscompare($a, $b) {
+    // Timeaccess is lastaccess entry and timestart an enrol entry.
+    if ((!empty($a->timeaccess)) && (!empty($b->timeaccess))) {
+        // Both last access.
+        if ($a->timeaccess == $b->timeaccess) {
+            return 0;
         }
-        else if ((!empty($a->timestart)) && (!empty($b->timestart))) {
-            // Both enrol.
-            if ($a->timestart == $b->timestart) {
-                return 0;
-            }
-            return ($a->timestart > $b->timestart) ? -1 : 1;
-        }
-        // Must be comparing an enrol with a last access.
-        // -1 is to say that 'a' comes before 'b'.
-        if (!empty($a->timestart)) {
-            // 'a' is the enrol entry.
-            return -1;
-        }
-        // 'b' must be the enrol entry.
-        return 1;
+        return ($a->timeaccess > $b->timeaccess) ? -1 : 1;
     }
-    // End copied code
+    else if ((!empty($a->timestart)) && (!empty($b->timestart))) {
+        // Both enrol.
+        if ($a->timestart == $b->timestart) {
+            return 0;
+        }
+        return ($a->timestart > $b->timestart) ? -1 : 1;
+    }
+    // Must be comparing an enrol with a last access.
+    // -1 is to say that 'a' comes before 'b'.
+    if (!empty($a->timestart)) {
+        // 'a' is the enrol entry.
+        return -1;
+    }
+    // 'b' must be the enrol entry.
+    return 1;
+}
+// End copied code
 
-    // The following code is a derivative work of the code from theme Essential https://moodle.org/plugins/theme_essential, by Gareth J Barnard
-    public function boost_union_mycourses() {
-        $context = $this->page->context;
-        $menu = new custom_menu();
-        
-            $branchtitle = get_string('latestcourses', 'theme_boost_union');
-            $branchlabel = $branchtitle;
-            $branchurl = new moodle_url('/my/courses.php');
-            $branchsort = 10000;
-            $branch = $menu->add($branchlabel, $branchurl, $branchtitle, $branchsort);
-            $dashlabel = get_string('viewallcourses', 'theme_boost_union');
-            $dashurl = new moodle_url("/my/courses.php");
-            $dashtitle = $dashlabel;
-            $nomycourses = get_string('nomycourses', 'theme_boost_union');
-            $courses = enrol_get_my_courses(null, 'sortorder ASC');
-             
-                if ($courses) {
-                    // We have something to work with.  Get the last accessed information for the user and populate.
-                    global $DB, $USER;
-                    $lastaccess = $DB->get_records('user_lastaccess', array('userid' => $USER->id) , '', 'courseid, timeaccess');
-                    if ($lastaccess) {
-                        foreach ($courses as $course) {
-                            if (!empty($lastaccess[$course->id])) {
-                                $course->timeaccess = $lastaccess[$course->id]->timeaccess;
-                            }
-                        }
-                    }
-                    // Determine if we need to query the enrolment and user enrolment tables.
-                    $enrolquery = false;
+// The following code is a derivative work of the code from theme Essential https://moodle.org/plugins/theme_essential, by Gareth J Barnard
+public function boost_union_mycourses() {
+    $context = $this->page->context;
+    $menu = new custom_menu();
+    
+        $branchtitle = get_string('latestcourses', 'theme_boost_union');
+        $branchlabel = $branchtitle;
+        $branchurl = new moodle_url('/my/courses.php');
+        $branchsort = 10000;
+        $branch = $menu->add($branchlabel, $branchurl, $branchtitle, $branchsort);
+        $dashlabel = get_string('viewallcourses', 'theme_boost_union');
+        $dashurl = new moodle_url("/my/courses.php");
+        $dashtitle = $dashlabel;
+        $nomycourses = get_string('nomycourses', 'theme_boost_union');
+        $courses = enrol_get_my_courses(null, 'sortorder ASC');
+         
+            if ($courses) {
+                // We have something to work with.  Get the last accessed information for the user and populate.
+                global $DB, $USER;
+                $lastaccess = $DB->get_records('user_lastaccess', array('userid' => $USER->id) , '', 'courseid, timeaccess');
+                if ($lastaccess) {
                     foreach ($courses as $course) {
-                        if (empty($course->timeaccess)) {
-                            $enrolquery = true;
-                            break;
+                        if (!empty($lastaccess[$course->id])) {
+                            $course->timeaccess = $lastaccess[$course->id]->timeaccess;
                         }
                     }
-                    if ($enrolquery) {
-                        // We do.
-                        $params = array(
-                            'userid' => $USER->id
-                        );
-                        $sql = "SELECT ue.id, e.courseid, ue.timestart
-                            FROM {enrol} e
-                            JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)";
-                        $enrolments = $DB->get_records_sql($sql, $params, 0, 0);
-                        if ($enrolments) {
-                            // Sort out any multiple enrolments on the same course.
-                            $userenrolments = array();
-                            foreach ($enrolments as $enrolment) {
-                                if (!empty($userenrolments[$enrolment->courseid])) {
-                                    if ($userenrolments[$enrolment->courseid] < $enrolment->timestart) {
-                                        // Replace.
-                                        $userenrolments[$enrolment->courseid] = $enrolment->timestart;
-                                    }
-                                }
-                                else {
+                }
+                // Determine if we need to query the enrolment and user enrolment tables.
+                $enrolquery = false;
+                foreach ($courses as $course) {
+                    if (empty($course->timeaccess)) {
+                        $enrolquery = true;
+                        break;
+                    }
+                }
+                if ($enrolquery) {
+                    // We do.
+                    $params = array(
+                        'userid' => $USER->id
+                    );
+                    $sql = "SELECT ue.id, e.courseid, ue.timestart
+                        FROM {enrol} e
+                        JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)";
+                    $enrolments = $DB->get_records_sql($sql, $params, 0, 0);
+                    if ($enrolments) {
+                        // Sort out any multiple enrolments on the same course.
+                        $userenrolments = array();
+                        foreach ($enrolments as $enrolment) {
+                            if (!empty($userenrolments[$enrolment->courseid])) {
+                                if ($userenrolments[$enrolment->courseid] < $enrolment->timestart) {
+                                    // Replace.
                                     $userenrolments[$enrolment->courseid] = $enrolment->timestart;
                                 }
                             }
-                            // We don't need to worry about timeend etc. as our course list will be valid for the user from above.
-                            foreach ($courses as $course) {
-                                if (empty($course->timeaccess)) {
-                                    $course->timestart = $userenrolments[$course->id];
-                                }
+                            else {
+                                $userenrolments[$enrolment->courseid] = $enrolment->timestart;
+                            }
+                        }
+                        // We don't need to worry about timeend etc. as our course list will be valid for the user from above.
+                        foreach ($courses as $course) {
+                            if (empty($course->timeaccess)) {
+                                $course->timestart = $userenrolments[$course->id];
                             }
                         }
                     }
-                    uasort($courses, array($this,'timeaccesscompare'));
                 }
-                else {
-                    return $nomycourses;
+                uasort($courses, array($this,'timeaccesscompare'));
+            }
+            else {
+                return $nomycourses;
+            }
+            $sortorder = $lastaccess;
+            $i = 0;
+            foreach ($courses as $course) {
+                if ($course->visible && $i < 7) {
+                    $branch->add(format_string($course->fullname) , new moodle_url('/course/view.php?id=' . $course->id) , format_string($course->shortname));
                 }
-                $sortorder = $lastaccess;
-                $i = 0;
-                foreach ($courses as $course) {
-                    if ($course->visible && $i < 7) {
-                        $branch->add(format_string($course->fullname) , new moodle_url('/course/view.php?id=' . $course->id) , format_string($course->shortname));
-                    }
-                    $i += 1;
-                }
-                $branch->add($dashlabel, $dashurl, $dashtitle);
-                $content = '';
-                foreach ($menu->get_children() as $item) {
-                    $context = $item->export_for_template($this);
-                    $content .= $this->render_from_template('theme_boost_union/mycourses', $context);
-                }
-        return $content;
-    }
-    // End derivative work
+                $i += 1;
+            }
+            $branch->add($dashlabel, $dashurl, $dashtitle);
+            $content = '';
+            foreach ($menu->get_children() as $item) {
+                $context = $item->export_for_template($this);
+                $content .= $this->render_from_template('theme_boost_union/mycourses', $context);
+            }
+    return $content;
+}
+// End derivative work
 
-    public function fpicons() {
-        $context = $this->page->context;
-        $hascreateicon = (empty($this->page->theme->settings->createicon && isloggedin() && has_capability('moodle/course:create', $context))) ? false : $this->page->theme->settings->createicon;
-        $createbuttonurl = (empty($this->page->theme->settings->createbuttonurl)) ? false : $this->page->theme->settings->createbuttonurl;
-        $createbuttontext = (empty($this->page->theme->settings->createbuttontext)) ? false : format_string($this->page->theme->settings->createbuttontext);
-        $hasslideicon = (empty($this->page->theme->settings->slideicon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->slideicon;
-        $slideiconbuttonurl = 'data-toggle="collapse" data-target="#collapseExample';
-        $slideiconbuttontext = (empty($this->page->theme->settings->slideiconbuttontext)) ? false : format_string($this->page->theme->settings->slideiconbuttontext);
-        $hasnav1icon = (empty($this->page->theme->settings->nav1icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav1icon;
-        $hasnav2icon = (empty($this->page->theme->settings->nav2icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav2icon;
-        $hasnav3icon = (empty($this->page->theme->settings->nav3icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav3icon;
-        $hasnav4icon = (empty($this->page->theme->settings->nav4icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav4icon;
-        $hasnav5icon = (empty($this->page->theme->settings->nav5icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav5icon;
-        $hasnav6icon = (empty($this->page->theme->settings->nav6icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav6icon;
-        $hasnav7icon = (empty($this->page->theme->settings->nav7icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav7icon;
-        $hasnav8icon = (empty($this->page->theme->settings->nav8icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav8icon;
-        $nav1buttonurl = (empty($this->page->theme->settings->nav1buttonurl)) ? false : $this->page->theme->settings->nav1buttonurl;
-        $nav2buttonurl = (empty($this->page->theme->settings->nav2buttonurl)) ? false : $this->page->theme->settings->nav2buttonurl;
-        $nav3buttonurl = (empty($this->page->theme->settings->nav3buttonurl)) ? false : $this->page->theme->settings->nav3buttonurl;
-        $nav4buttonurl = (empty($this->page->theme->settings->nav4buttonurl)) ? false : $this->page->theme->settings->nav4buttonurl;
-        $nav5buttonurl = (empty($this->page->theme->settings->nav5buttonurl)) ? false : $this->page->theme->settings->nav5buttonurl;
-        $nav6buttonurl = (empty($this->page->theme->settings->nav6buttonurl)) ? false : $this->page->theme->settings->nav6buttonurl;
-        $nav7buttonurl = (empty($this->page->theme->settings->nav7buttonurl)) ? false : $this->page->theme->settings->nav7buttonurl;
-        $nav8buttonurl = (empty($this->page->theme->settings->nav8buttonurl)) ? false : $this->page->theme->settings->nav8buttonurl;
-        $nav1buttontext = (empty($this->page->theme->settings->nav1buttontext)) ? false : format_string($this->page->theme->settings->nav1buttontext);
-        $nav2buttontext = (empty($this->page->theme->settings->nav2buttontext)) ? false : format_string($this->page->theme->settings->nav2buttontext);
-        $nav3buttontext = (empty($this->page->theme->settings->nav3buttontext)) ? false : format_string($this->page->theme->settings->nav3buttontext);
-        $nav4buttontext = (empty($this->page->theme->settings->nav4buttontext)) ? false : format_string($this->page->theme->settings->nav4buttontext);
-        $nav5buttontext = (empty($this->page->theme->settings->nav5buttontext)) ? false : format_string($this->page->theme->settings->nav5buttontext);
-        $nav6buttontext = (empty($this->page->theme->settings->nav6buttontext)) ? false : format_string($this->page->theme->settings->nav6buttontext);
-        $nav7buttontext = (empty($this->page->theme->settings->nav7buttontext)) ? false : format_string($this->page->theme->settings->nav7buttontext);
-        $nav8buttontext = (empty($this->page->theme->settings->nav8buttontext)) ? false : format_string($this->page->theme->settings->nav8buttontext);
-        $nav1target = (empty($this->page->theme->settings->nav1target)) ? false : $this->page->theme->settings->nav1target;
-        $nav2target = (empty($this->page->theme->settings->nav2target)) ? false : $this->page->theme->settings->nav2target;
-        $nav3target = (empty($this->page->theme->settings->nav3target)) ? false : $this->page->theme->settings->nav3target;
-        $nav4target = (empty($this->page->theme->settings->nav4target)) ? false : $this->page->theme->settings->nav4target;
-        $nav5target = (empty($this->page->theme->settings->nav5target)) ? false : $this->page->theme->settings->nav5target;
-        $nav6target = (empty($this->page->theme->settings->nav6target)) ? false : $this->page->theme->settings->nav6target;
-        $nav7target = (empty($this->page->theme->settings->nav7target)) ? false : $this->page->theme->settings->nav7target;
-        $nav8target = (empty($this->page->theme->settings->nav8target)) ? false : $this->page->theme->settings->nav8target;
-        $slidetextbox = (empty($this->page->theme->settings->slidetextbox && isloggedin())) ? false : format_text($this->page->theme->settings->slidetextbox, FORMAT_HTML, array(
-            'noclean' => true
-        ));
+public function fpicons() {
+    $context = $this->page->context;
+    $hascreateicon = (empty($this->page->theme->settings->createicon && isloggedin() && has_capability('moodle/course:create', $context))) ? false : $this->page->theme->settings->createicon;
+    $createbuttonurl = (empty($this->page->theme->settings->createbuttonurl)) ? false : $this->page->theme->settings->createbuttonurl;
+    $createbuttontext = (empty($this->page->theme->settings->createbuttontext)) ? false : format_string($this->page->theme->settings->createbuttontext);
+    $hasslideicon = (empty($this->page->theme->settings->slideicon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->slideicon;
+    $slideiconbuttonurl = 'data-toggle="collapse" data-target="#collapseExample';
+    $slideiconbuttontext = (empty($this->page->theme->settings->slideiconbuttontext)) ? false : format_string($this->page->theme->settings->slideiconbuttontext);
+    $hasnav1icon = (empty($this->page->theme->settings->nav1icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav1icon;
+    $hasnav2icon = (empty($this->page->theme->settings->nav2icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav2icon;
+    $hasnav3icon = (empty($this->page->theme->settings->nav3icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav3icon;
+    $hasnav4icon = (empty($this->page->theme->settings->nav4icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav4icon;
+    $hasnav5icon = (empty($this->page->theme->settings->nav5icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav5icon;
+    $hasnav6icon = (empty($this->page->theme->settings->nav6icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav6icon;
+    $hasnav7icon = (empty($this->page->theme->settings->nav7icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav7icon;
+    $hasnav8icon = (empty($this->page->theme->settings->nav8icon && isloggedin() && !isguestuser())) ? false : $this->page->theme->settings->nav8icon;
+    $nav1buttonurl = (empty($this->page->theme->settings->nav1buttonurl)) ? false : $this->page->theme->settings->nav1buttonurl;
+    $nav2buttonurl = (empty($this->page->theme->settings->nav2buttonurl)) ? false : $this->page->theme->settings->nav2buttonurl;
+    $nav3buttonurl = (empty($this->page->theme->settings->nav3buttonurl)) ? false : $this->page->theme->settings->nav3buttonurl;
+    $nav4buttonurl = (empty($this->page->theme->settings->nav4buttonurl)) ? false : $this->page->theme->settings->nav4buttonurl;
+    $nav5buttonurl = (empty($this->page->theme->settings->nav5buttonurl)) ? false : $this->page->theme->settings->nav5buttonurl;
+    $nav6buttonurl = (empty($this->page->theme->settings->nav6buttonurl)) ? false : $this->page->theme->settings->nav6buttonurl;
+    $nav7buttonurl = (empty($this->page->theme->settings->nav7buttonurl)) ? false : $this->page->theme->settings->nav7buttonurl;
+    $nav8buttonurl = (empty($this->page->theme->settings->nav8buttonurl)) ? false : $this->page->theme->settings->nav8buttonurl;
+    $nav1buttontext = (empty($this->page->theme->settings->nav1buttontext)) ? false : format_string($this->page->theme->settings->nav1buttontext);
+    $nav2buttontext = (empty($this->page->theme->settings->nav2buttontext)) ? false : format_string($this->page->theme->settings->nav2buttontext);
+    $nav3buttontext = (empty($this->page->theme->settings->nav3buttontext)) ? false : format_string($this->page->theme->settings->nav3buttontext);
+    $nav4buttontext = (empty($this->page->theme->settings->nav4buttontext)) ? false : format_string($this->page->theme->settings->nav4buttontext);
+    $nav5buttontext = (empty($this->page->theme->settings->nav5buttontext)) ? false : format_string($this->page->theme->settings->nav5buttontext);
+    $nav6buttontext = (empty($this->page->theme->settings->nav6buttontext)) ? false : format_string($this->page->theme->settings->nav6buttontext);
+    $nav7buttontext = (empty($this->page->theme->settings->nav7buttontext)) ? false : format_string($this->page->theme->settings->nav7buttontext);
+    $nav8buttontext = (empty($this->page->theme->settings->nav8buttontext)) ? false : format_string($this->page->theme->settings->nav8buttontext);
+    $nav1target = (empty($this->page->theme->settings->nav1target)) ? false : $this->page->theme->settings->nav1target;
+    $nav2target = (empty($this->page->theme->settings->nav2target)) ? false : $this->page->theme->settings->nav2target;
+    $nav3target = (empty($this->page->theme->settings->nav3target)) ? false : $this->page->theme->settings->nav3target;
+    $nav4target = (empty($this->page->theme->settings->nav4target)) ? false : $this->page->theme->settings->nav4target;
+    $nav5target = (empty($this->page->theme->settings->nav5target)) ? false : $this->page->theme->settings->nav5target;
+    $nav6target = (empty($this->page->theme->settings->nav6target)) ? false : $this->page->theme->settings->nav6target;
+    $nav7target = (empty($this->page->theme->settings->nav7target)) ? false : $this->page->theme->settings->nav7target;
+    $nav8target = (empty($this->page->theme->settings->nav8target)) ? false : $this->page->theme->settings->nav8target;
+    $slidetextbox = (empty($this->page->theme->settings->slidetextbox && isloggedin())) ? false : format_text($this->page->theme->settings->slidetextbox, FORMAT_HTML, array(
+        'noclean' => true
+    ));
 
-        $fp_icons = [
-            'hasslidetextbox' => (!empty($this->page->theme->settings->slidetextbox && isloggedin())) ,
-            'slidetextbox' => $slidetextbox, 'hasfptextboxlogout' => !isloggedin() ,
-            'hasfpiconnav' => ($hasnav1icon || $hasnav2icon || $hasnav3icon || $hasnav4icon || $hasnav5icon || $hasnav6icon || $hasnav7icon || $hasnav8icon || $hasslideicon ? true : false) && ($this->page->pagelayout == 'mydashboard' || $this->page->pagelayout == 'frontpage' || $this->page->pagelayout == 'mycourses'), 
-            'fpiconnav' => array(
-                array(
-                    'hasicon' => $hasnav1icon,
-                    'linkicon' => $hasnav1icon,
-                    'link' => $nav1buttonurl,
-                    'linktext' => $nav1buttontext,
-                    'linktarget' => $nav1target
-                ) ,
-                array(
-                    'hasicon' => $hasnav2icon,
-                    'linkicon' => $hasnav2icon,
-                    'link' => $nav2buttonurl,
-                    'linktext' => $nav2buttontext,
-                    'linktarget' => $nav2target
-                ) ,
-                array(
-                    'hasicon' => $hasnav3icon,
-                    'linkicon' => $hasnav3icon,
-                    'link' => $nav3buttonurl,
-                    'linktext' => $nav3buttontext,
-                    'linktarget' => $nav3target
-                ) ,
-                array(
-                    'hasicon' => $hasnav4icon,
-                    'linkicon' => $hasnav4icon,
-                    'link' => $nav4buttonurl,
-                    'linktext' => $nav4buttontext,
-                    'linktarget' => $nav4target
-                ) ,
-                array(
-                    'hasicon' => $hasnav5icon,
-                    'linkicon' => $hasnav5icon,
-                    'link' => $nav5buttonurl,
-                    'linktext' => $nav5buttontext,
-                    'linktarget' => $nav5target
-                ) ,
-                array(
-                    'hasicon' => $hasnav6icon,
-                    'linkicon' => $hasnav6icon,
-                    'link' => $nav6buttonurl,
-                    'linktext' => $nav6buttontext,
-                    'linktarget' => $nav6target
-                ) ,
-                array(
-                    'hasicon' => $hasnav7icon,
-                    'linkicon' => $hasnav7icon,
-                    'link' => $nav7buttonurl,
-                    'linktext' => $nav7buttontext,
-                    'linktarget' => $nav7target
-                ) ,
-                array(
-                    'hasicon' => $hasnav8icon,
-                    'linkicon' => $hasnav8icon,
-                    'link' => $nav8buttonurl,
-                    'linktext' => $nav8buttontext,
-                    'linktarget' => $nav8target
-                ) ,
+    $fp_icons = [
+        'hasslidetextbox' => (!empty($this->page->theme->settings->slidetextbox && isloggedin())) ,
+        'slidetextbox' => $slidetextbox, 'hasfptextboxlogout' => !isloggedin() ,
+        'hasfpiconnav' => ($hasnav1icon || $hasnav2icon || $hasnav3icon || $hasnav4icon || $hasnav5icon || $hasnav6icon || $hasnav7icon || $hasnav8icon || $hasslideicon ? true : false) && ($this->page->pagelayout == 'mydashboard' || $this->page->pagelayout == 'frontpage' || $this->page->pagelayout == 'mycourses'), 
+        'fpiconnav' => array(
+            array(
+                'hasicon' => $hasnav1icon,
+                'linkicon' => $hasnav1icon,
+                'link' => $nav1buttonurl,
+                'linktext' => $nav1buttontext,
+                'linktarget' => $nav1target
             ) ,
-            'fpslideicon' => array(
-                array(
-                    'hasicon' => $hasslideicon,
-                    'linkicon' => $hasslideicon,
-                    'link' => $slideiconbuttonurl,
-                    'linktext' => $slideiconbuttontext
-                ) ,
+            array(
+                'hasicon' => $hasnav2icon,
+                'linkicon' => $hasnav2icon,
+                'link' => $nav2buttonurl,
+                'linktext' => $nav2buttontext,
+                'linktarget' => $nav2target
             ) ,
-            'fpcreateicon' => array(
-                array(
-                    'hasicon' => $hascreateicon,
-                    'linkicon' => $hascreateicon,
-                    'link' => $createbuttonurl,
-                    'linktext' => $createbuttontext
-                ) ,
+            array(
+                'hasicon' => $hasnav3icon,
+                'linkicon' => $hasnav3icon,
+                'link' => $nav3buttonurl,
+                'linktext' => $nav3buttontext,
+                'linktarget' => $nav3target
             ) ,
-        ];
+            array(
+                'hasicon' => $hasnav4icon,
+                'linkicon' => $hasnav4icon,
+                'link' => $nav4buttonurl,
+                'linktext' => $nav4buttontext,
+                'linktarget' => $nav4target
+            ) ,
+            array(
+                'hasicon' => $hasnav5icon,
+                'linkicon' => $hasnav5icon,
+                'link' => $nav5buttonurl,
+                'linktext' => $nav5buttontext,
+                'linktarget' => $nav5target
+            ) ,
+            array(
+                'hasicon' => $hasnav6icon,
+                'linkicon' => $hasnav6icon,
+                'link' => $nav6buttonurl,
+                'linktext' => $nav6buttontext,
+                'linktarget' => $nav6target
+            ) ,
+            array(
+                'hasicon' => $hasnav7icon,
+                'linkicon' => $hasnav7icon,
+                'link' => $nav7buttonurl,
+                'linktext' => $nav7buttontext,
+                'linktarget' => $nav7target
+            ) ,
+            array(
+                'hasicon' => $hasnav8icon,
+                'linkicon' => $hasnav8icon,
+                'link' => $nav8buttonurl,
+                'linktext' => $nav8buttontext,
+                'linktarget' => $nav8target
+            ) ,
+        ) ,
+        'fpslideicon' => array(
+            array(
+                'hasicon' => $hasslideicon,
+                'linkicon' => $hasslideicon,
+                'link' => $slideiconbuttonurl,
+                'linktext' => $slideiconbuttontext
+            ) ,
+        ) ,
+        'fpcreateicon' => array(
+            array(
+                'hasicon' => $hascreateicon,
+                'linkicon' => $hascreateicon,
+                'link' => $createbuttonurl,
+                'linktext' => $createbuttontext
+            ) ,
+        ) ,
+    ];
 
-        return $this->render_from_template('theme_boost_union/fpicons', $fp_icons);
+    return $this->render_from_template('theme_boost_union/fpicons', $fp_icons);
 
-    }
-    
-    // Use default image on both dashboard/mycourses and in course pages.
-    public function get_generated_image_for_id($id) {
-        // See if user uploaded a custom header background to the theme.
-        $headerbg = $this->page->theme->setting_file_url('courseheaderimagefallback', 'courseheaderimagefallback');
-        $hasheaderbg = $this->page->theme->settings->courseheaderimageenabled == THEME_BOOST_UNION_SETTING_SELECT_YES;
-        if (isset($headerbg) && $hasheaderbg)  {
-            return $headerbg;
-        } elseif ($hasheaderbg) {
-            // Usefallback image for mycourse regardless.
-            return $this->page->theme->image_url('noimg', 'theme')->out();
-        } else {
-            $color = $this->get_generated_color_for_id($id);
-            $pattern = new \core_geopattern();
-            $pattern->setColor($color);
-            $pattern->patternbyid($id);
-            return $pattern->datauri();
-        }
-    }
+}
 
-    protected function render_courseactivities_menu(custom_menu $menu) {
-        global $CFG;
-        $content = '';
-        foreach ($menu->get_children() as $item) {
-            $context = $item->export_for_template($this);
-            $content .= $this->render_from_template('theme_boost_union/activitygroups', $context);
-        }
-        return $content;
+// Use default image on both dashboard/mycourses and in course pages.
+public function get_generated_image_for_id($id) {
+    // See if user uploaded a custom header background to the theme.
+    $headerbg = $this->page->theme->setting_file_url('courseheaderimagefallback', 'courseheaderimagefallback');
+    $hasheaderbg = $this->page->theme->settings->courseheaderimageenabled == THEME_BOOST_UNION_SETTING_SELECT_YES;
+    if (isset($headerbg) && $hasheaderbg)  {
+        return $headerbg;
+    } elseif ($hasheaderbg) {
+        // Usefallback image for mycourse regardless.
+        return $this->page->theme->image_url('noimg', 'theme')->out();
+    } else {
+        $color = $this->get_generated_color_for_id($id);
+        $pattern = new \core_geopattern();
+        $pattern->setColor($color);
+        $pattern->patternbyid($id);
+        return $pattern->datauri();
     }
-    
-    public function courseactivities_menu() {
-        global $PAGE, $COURSE, $OUTPUT, $CFG;
-        $menu = new custom_menu();
-        $context = $this->page->context;
-        if (isset($COURSE->id) && $COURSE->id > 1) {
-            $branchtitle = get_string('courseactivities', 'theme_boost_union');
-            $branchlabel = $branchtitle;
-            $branchurl = new moodle_url('#');
-            $branch = $menu->add($branchlabel, $branchurl, $branchtitle, 10002);
-            $data = theme_boost_union_get_course_activities();
-            foreach ($data as $modname => $modfullname) {
-                if ($modname === 'resources') {
-                    $branch->add($modfullname, new moodle_url('/course/resources.php', array(
-                        'id' => $PAGE->course->id
-                    )));
-                }
-                else {
-                    $branch->add($modfullname, new moodle_url('/mod/' . $modname . '/index.php', array(
-                        'id' => $PAGE->course->id
-                    )));
-                }
+}
+
+protected function render_courseactivities_menu(custom_menu $menu) {
+    global $CFG;
+    $content = '';
+    foreach ($menu->get_children() as $item) {
+        $context = $item->export_for_template($this);
+        $content .= $this->render_from_template('theme_boost_union/activitygroups', $context);
+    }
+    return $content;
+}
+
+public function courseactivities_menu() {
+    global $PAGE, $COURSE, $OUTPUT, $CFG;
+    $menu = new custom_menu();
+    $context = $this->page->context;
+    if (isset($COURSE->id) && $COURSE->id > 1) {
+        $branchtitle = get_string('courseactivities', 'theme_boost_union');
+        $branchlabel = $branchtitle;
+        $branchurl = new moodle_url('#');
+        $branch = $menu->add($branchlabel, $branchurl, $branchtitle, 10002);
+        $data = theme_boost_union_get_course_activities();
+        foreach ($data as $modname => $modfullname) {
+            if ($modname === 'resources') {
+                $branch->add($modfullname, new moodle_url('/course/resources.php', array(
+                    'id' => $PAGE->course->id
+                )));
+            }
+            else {
+                $branch->add($modfullname, new moodle_url('/mod/' . $modname . '/index.php', array(
+                    'id' => $PAGE->course->id
+                )));
             }
         }
-        return $this->render_courseactivities_menu($menu);
     }
+    return $this->render_courseactivities_menu($menu);
+}
 
-    /**
-     * Renders the login form.
-     *
-     * @param \core_auth\output\login $form The renderable.
-     * @return string
-     */
-    public function render_login(\core_auth\output\login $form) {
-        global $CFG, $SITE;
+/**
+ * Renders the login form.
+ *
+ * @param \core_auth\output\login $form The renderable.
+ * @return string
+ */
+public function render_login(\core_auth\output\login $form) {
+    global $CFG, $SITE;
 
-        $context = $form->export_for_template($this);
+    $context = $form->export_for_template($this);
 
-        $context->errorformatted = $this->error_text($context->error);
-        $url = $this->get_logo_url();
-        if ($url) {
-            $url = $url->out(false);
-        }
-        $context->hideloginform = $this->page->theme->settings->hideloginform == 1;
-        $context->logourl = $url;
-        $context->sitename = format_string($SITE->fullname, true,
-                ['context' => context_course::instance(SITEID), "escape" => false]);
-
-        return $this->render_from_template('core/loginform', $context);
+    $context->errorformatted = $this->error_text($context->error);
+    $url = $this->get_logo_url();
+    if ($url) {
+        $url = $url->out(false);
     }
+    $context->hideloginform = $this->page->theme->settings->hideloginform == 1;
+    $context->logourl = $url;
+    $context->sitename = format_string($SITE->fullname, true,
+            ['context' => context_course::instance(SITEID), "escape" => false]);
 
-    public function coursemanagementdash() {
-        global $PAGE, $COURSE, $CFG, $DB, $OUTPUT, $USER;
+    return $this->render_from_template('core/loginform', $context);
+}
 
-        $course = $this->page->course;
-        $context = context_course::instance($course->id);
-        $hascoursemanagement = has_capability('moodle/course:viewhiddenactivities', $context);
-        $togglebutton = get_string('coursemanagementbutton', 'theme_boost_union');
-        $showincourseonly = isset($COURSE->id) && $COURSE->id > 1 && $this->page->theme->settings->showcoursemanagement == 1 && isloggedin() && !isguestuser();
-        $globalhaseasyenrollment = enrol_get_plugin('easy');
+public function coursemanagementdash() {
+    global $PAGE, $COURSE, $CFG, $DB, $OUTPUT, $USER;
+
+    $course = $this->page->course;
+    $context = context_course::instance($course->id);
+    $hascoursemanagement = has_capability('moodle/course:viewhiddenactivities', $context);
+    $togglebutton = get_string('coursemanagementbutton', 'theme_boost_union');
+    $showincourseonly = isset($COURSE->id) && $COURSE->id > 1 && $this->page->theme->settings->showcoursemanagement == 1 && isloggedin() && !isguestuser();
+    $globalhaseasyenrollment = enrol_get_plugin('easy');
 
 
-        // Link Headers and text.
-        $coursemanagementmessage = (empty($PAGE->theme->settings->coursemanagementtextbox)) ? false : format_text($PAGE->theme->settings->coursemanagementtextbox, FORMAT_HTML, array(
-            'noclean' => true
-        ));
+    // Link Headers and text.
+    $coursemanagementmessage = (empty($PAGE->theme->settings->coursemanagementtextbox)) ? false : format_text($PAGE->theme->settings->coursemanagementtextbox, FORMAT_HTML, array(
+        'noclean' => true
+    ));
 
-        // Build links.
-        $dashlinks = [
-            'manageuserstitle' => get_string('manageuserstitle', 'theme_boost_union'),
-            'gradebooktitle' => get_string('gradebooktitle', 'theme_boost_union'),
-            'progresstitle' => get_string('progresstitle', 'theme_boost_union'),
-            'coursemanagetitle' => get_string('coursemanagetitle', 'theme_boost_union'),
-            'showincourseonly' => $showincourseonly,
-            'hascoursemanagement' => $hascoursemanagement,
+    // Build links.
+    $dashlinks = [
+        'manageuserstitle' => get_string('manageuserstitle', 'theme_boost_union'),
+        'gradebooktitle' => get_string('gradebooktitle', 'theme_boost_union'),
+        'progresstitle' => get_string('progresstitle', 'theme_boost_union'),
+        'coursemanagetitle' => get_string('coursemanagetitle', 'theme_boost_union'),
+        'showincourseonly' => $showincourseonly,
+        'hascoursemanagement' => $hascoursemanagement,
 
-            'dashlinks' => array(
-                // User Links.
-                // Bulkenrol.
-                array(
-                    'hasuserlinks' => get_string('pluginname', 'local_bulkenrol'),
-                    'title' => get_string('pluginname', 'local_bulkenrol'),
-                    'url' => new moodle_url('/local/bulkenrol/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ) ,
-                // Easy Enrollment.
-                array(
-                    'hasuserlinks' => get_string('header_coursecodes', 'enrol_easy'),
-                    'title' => get_string('header_coursecodes', 'enrol_easy'),
-                    'url' => new moodle_url('/enrol/editinstance.php', array(
-                        'courseid' => $PAGE->course->id,
-                        'id' => $easyenrollinstance->id,
-                        'type' => 'easy'
-                    ))
-                ),
-                // Participants.
-                array(
-                    'hasuserlinks' => get_string('participants', 'moodle'),
-                    'title' => get_string('participants', 'moodle'),
-                    'url' => new moodle_url('/user/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Groups.
-                array(
-                    'hasuserlinks' => get_string('groups', 'group'),
-                    'title' => get_string('groups', 'group'),
-                    'url' => new moodle_url('/group/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-
-                // Gradebook Links.
-                //Export to MISTAR
-                array(
-                    'hasgradebooklinks' => get_string('exporttomistar', 'theme_boost_union'),
-                    'title' => get_string('exporttomistar', 'theme_boost_union'),
-                    'url' => new moodle_url('/grade/export/mistar/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Gradebook grader.
-                array(
-                    'hasgradebooklinks' => get_string('gradebook', 'grades'),
-                    'title' => get_string('gradebook', 'grades'),
-                    'url' => new moodle_url('/grade/report/grader/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // User Gradebook Report.
-                array(
-                    'hasgradebooklinks' => get_string('userreportgradebook', 'theme_boost_union'),
-                    'title' => get_string('userreportgradebook', 'theme_boost_union'),
-                    'url' => new moodle_url('/grade/report/user/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Greadebook Setup.
-                array(
-                    'hasgradebooklinks' => get_string('gradebooksetup', 'grades'),
-                    'title' => get_string('gradebooksetup', 'grades'),
-                    'url' => new moodle_url('/grade/edit/tree/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-
-                // Progress links.
-                // Badges.
-                array(
-                    'hasprogresslinks' => get_string('managebadges', 'badges'),
-                    'title' => get_string('managebadges', 'badges'),
-                    'url' => new moodle_url('/badges/view.php?type=2', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Course Completion.
-                array(
-                    'hasprogresslinks' => get_string('editcoursecompletionsettings', 'completion'),
-                    'title' => get_string('editcoursecompletionsettings', 'completion'),
-                    'url' => new moodle_url('/course/completion.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Activity Completion.
-                array(
-                    'hasprogresslinks' => get_string('activitycompletion', 'completion'),
-                    'title' => get_string('activitycompletion', 'completion'),
-                    'url' => new moodle_url('/report/progress/index.php', array(
-                        'course' => $PAGE->course->id
-                    ))
-                ),
-                // Activity Report.
-                array(
-                    'hasprogresslinks' => get_string('outline:view', 'report_outline'),
-                    'title' => get_string('outline:view', 'report_outline'),
-                    'url' => new moodle_url('/report/outline/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Live Logs.
-                array(
-                    'hasprogresslinks' => get_string('loglive:view', 'report_loglive'),
-                    'title' => get_string('loglive:view', 'report_loglive'),
-                    'url' => new moodle_url('/report/loglive/index.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-
-                // Course Management.
-                // Reset course.
-                array(
-                    'hascoursemanagelinks' => get_string('reset', 'moodle'),
-                    'title' => get_string('reset', 'moodle'),
-                    'url' => new moodle_url('/course/reset.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Copy course.
-                array(
-                    'hascoursemanagelinks' => get_string('copycourse', 'moodle'),
-                    'title' => get_string('copycourse', 'moodle'),
-                    'url' => new moodle_url('/backup/copy.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Backup course.
-                array(
-                    'hascoursemanagelinks' => get_string('backup', 'moodle'),
-                    'title' => get_string('backup', 'moodle'),
-                    'url' => new moodle_url('/backup/backup.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                // Restore course.
-                array(
-                    'hascoursemanagelinks' => get_string('restore', 'moodle'),
-                    'title' => get_string('restore', 'moodle'),
-                    'url' => new moodle_url('/backup/restorefile.php', array(
-                        'contextid' => $PAGE->context->id
-                    ))
-                ),
-                // Import course.
-                array(
-                    'hascoursemanagelinks' => get_string('import', 'moodle'),
-                    'title' => get_string('import', 'moodle'),
-                    'url' => new moodle_url('/backup/import.php', array(
-                        'id' => $PAGE->course->id
-                    ))
-                ),
-                
+        'dashlinks' => array(
+            // User Links.
+            // Bulkenrol.
+            array(
+                'hasuserlinks' => get_string('pluginname', 'local_bulkenrol'),
+                'title' => get_string('pluginname', 'local_bulkenrol'),
+                'url' => new moodle_url('/local/bulkenrol/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ) ,
+            // Easy Enrollment.
+            array(
+                'hasuserlinks' => get_string('header_coursecodes', 'enrol_easy'),
+                'title' => get_string('header_coursecodes', 'enrol_easy'),
+                'url' => new moodle_url('/enrol/editinstance.php', array(
+                    'courseid' => $PAGE->course->id,
+                    'id' => $easyenrollinstance->id,
+                    'type' => 'easy'
+                ))
             ),
-        ];
-        return $this->render_from_template('theme_boost_union/coursemanagement', $dashlinks);
-    }
-    //End DBN Update
+            // Participants.
+            array(
+                'hasuserlinks' => get_string('participants', 'moodle'),
+                'title' => get_string('participants', 'moodle'),
+                'url' => new moodle_url('/user/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Groups.
+            array(
+                'hasuserlinks' => get_string('groups', 'group'),
+                'title' => get_string('groups', 'group'),
+                'url' => new moodle_url('/group/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+
+            // Gradebook Links.
+            //Export to MISTAR
+            array(
+                'hasgradebooklinks' => get_string('exporttomistar', 'theme_boost_union'),
+                'title' => get_string('exporttomistar', 'theme_boost_union'),
+                'url' => new moodle_url('/grade/export/mistar/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Gradebook grader.
+            array(
+                'hasgradebooklinks' => get_string('gradebook', 'grades'),
+                'title' => get_string('gradebook', 'grades'),
+                'url' => new moodle_url('/grade/report/grader/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // User Gradebook Report.
+            array(
+                'hasgradebooklinks' => get_string('userreportgradebook', 'theme_boost_union'),
+                'title' => get_string('userreportgradebook', 'theme_boost_union'),
+                'url' => new moodle_url('/grade/report/user/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Greadebook Setup.
+            array(
+                'hasgradebooklinks' => get_string('gradebooksetup', 'grades'),
+                'title' => get_string('gradebooksetup', 'grades'),
+                'url' => new moodle_url('/grade/edit/tree/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+
+            // Progress links.
+            // Badges.
+            array(
+                'hasprogresslinks' => get_string('managebadges', 'badges'),
+                'title' => get_string('managebadges', 'badges'),
+                'url' => new moodle_url('/badges/view.php?type=2', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Course Completion.
+            array(
+                'hasprogresslinks' => get_string('editcoursecompletionsettings', 'completion'),
+                'title' => get_string('editcoursecompletionsettings', 'completion'),
+                'url' => new moodle_url('/course/completion.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Activity Completion.
+            array(
+                'hasprogresslinks' => get_string('activitycompletion', 'completion'),
+                'title' => get_string('activitycompletion', 'completion'),
+                'url' => new moodle_url('/report/progress/index.php', array(
+                    'course' => $PAGE->course->id
+                ))
+            ),
+            // Activity Report.
+            array(
+                'hasprogresslinks' => get_string('outline:view', 'report_outline'),
+                'title' => get_string('outline:view', 'report_outline'),
+                'url' => new moodle_url('/report/outline/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Live Logs.
+            array(
+                'hasprogresslinks' => get_string('loglive:view', 'report_loglive'),
+                'title' => get_string('loglive:view', 'report_loglive'),
+                'url' => new moodle_url('/report/loglive/index.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+
+            // Course Management.
+            // Reset course.
+            array(
+                'hascoursemanagelinks' => get_string('reset', 'moodle'),
+                'title' => get_string('reset', 'moodle'),
+                'url' => new moodle_url('/course/reset.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Copy course.
+            array(
+                'hascoursemanagelinks' => get_string('copycourse', 'moodle'),
+                'title' => get_string('copycourse', 'moodle'),
+                'url' => new moodle_url('/backup/copy.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Backup course.
+            array(
+                'hascoursemanagelinks' => get_string('backup', 'moodle'),
+                'title' => get_string('backup', 'moodle'),
+                'url' => new moodle_url('/backup/backup.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            // Restore course.
+            array(
+                'hascoursemanagelinks' => get_string('restore', 'moodle'),
+                'title' => get_string('restore', 'moodle'),
+                'url' => new moodle_url('/backup/restorefile.php', array(
+                    'contextid' => $PAGE->context->id
+                ))
+            ),
+            // Import course.
+            array(
+                'hascoursemanagelinks' => get_string('import', 'moodle'),
+                'title' => get_string('import', 'moodle'),
+                'url' => new moodle_url('/backup/import.php', array(
+                    'id' => $PAGE->course->id
+                ))
+            ),
+            
+        ),
+    ];
+    return $this->render_from_template('theme_boost_union/coursemanagement', $dashlinks);
+}
+//End DBN Update
 }

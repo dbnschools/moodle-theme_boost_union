@@ -22,7 +22,7 @@ $green:   #357a32 !default;
 $teal:    #20c997 !default;
 $cyan:    #008196 !default;
 
-$primary:       #017e9b !default;
+$primary:       $blue !default;
 $success:       $green !default;
 $info:          $cyan !default;
 $warning:       $orange !default;
@@ -45,6 +45,11 @@ $body-color:    $gray-900 !default;
 $font-size-base: 0.9375rem !default;
 $rfs-base-font-size: 0.9rem !default;
 $headings-font-weight:   700 !default;
+
+// Navbar
+$navbar-dark-hover-color:           rgba($white, 1) !default;
+$navbar-light-color:                rgba($black, 0.6) !default;
+$navbar-light-hover-color:          rgba($black, .9) !default;
 
 // Breadcrumbs
 $breadcrumb-padding-y:              .5rem !default;
@@ -95,8 +100,8 @@ $dropdown-link-hover-bg: $primary;
 
 $popover-max-width: 300px !default;
 
-$border-radius: 0 !default;
-$border-radius-lg: 0 !default;
+$border-radius: .25rem !default;
+$border-radius-lg: .6rem !default;
 
 // stylelint-disable
 $theme-colors: () !default;
@@ -137,10 +142,9 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/*.navbar {
+.navbar {
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
-    box-shadow: 0 0 9px 0 rgba(0,0,0,.6)!important;
-}*/
+}
 
 // Rounded user pictures
 .userpicture {
