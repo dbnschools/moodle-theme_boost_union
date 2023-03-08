@@ -164,6 +164,100 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);
+
+        // Course Tile Display Styles
+        $name = 'theme_boost_union/coursetilestyle';
+        $title = get_string('coursetilestyle' , 'theme_boost_union');
+        $description = get_string('coursetilestyle_desc', 'theme_boost_union');
+        $coursestyle1 = get_string('coursestyle1', 'theme_boost_union');
+        $coursestyle2 = get_string('coursestyle2', 'theme_boost_union');
+        $coursestyle3 = get_string('coursestyle3', 'theme_boost_union');
+        $coursestyle4 = get_string('coursestyle4', 'theme_boost_union');
+        $coursestyle5 = get_string('coursestyle5', 'theme_boost_union');
+        $coursestyle6 = get_string('coursestyle6', 'theme_boost_union');
+        $coursestyle7 = get_string('coursestyle7', 'theme_boost_union');
+        $coursestyle8 = get_string('coursestyle8', 'theme_boost_union');
+        $coursestyle9 = get_string('coursestyle9', 'theme_boost_union');
+        $coursestyle10 = get_string('coursestyle10', 'theme_boost_union');
+        $default = '10';
+        $choices = array('1'=>$coursestyle1, '2'=>$coursestyle2, '3'=>$coursestyle3, '4'=>$coursestyle4, '5'=>$coursestyle5, '6'=>$coursestyle6, '7'=>$coursestyle7, '8'=>$coursestyle8, '9'=>$coursestyle9, '10'=>$coursestyle10);
+        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // trim title setting.
+        $name = 'theme_boost_union/trimtitle';
+        $title = get_string('trimtitle', 'theme_boost_union');
+        $description = get_string('trimtitle_desc', 'theme_boost_union');
+        $default = '256';
+        $choices = array(
+                '15' => '15',
+                '20' => '20',
+                '30' => '30',
+                '40' => '40',
+                '50' => '50',
+                '60' => '60',
+                '70' => '70',
+                '80' => '80',
+                '90' => '90',
+                '100' => '100',
+                '110' => '110',
+                '120' => '120',
+                '130' => '130',
+                '140' => '140',
+                '150' => '150',
+                '175' => '175',
+                '200' => '200',
+                '256' => '256',
+                );
+        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // trim title setting.
+        $name = 'theme_boost_union/trimsummary';
+        $title = get_string('trimsummary', 'theme_boost_union');
+        $description = get_string('trimsummary_desc', 'theme_boost_union');
+        $default = '300';
+        $choices = array(
+                '30' => '30',
+                '60' => '60',
+                '90' => '90',
+                '100' => '100',
+                '150' => '150',
+                '200' => '200',
+                '250' => '250',
+                '300' => '300',
+                '350' => '350',
+                '400' => '400',
+                '450' => '450',
+                '500' => '500',
+                '600' => '600',
+                '800' => '800',
+                );
+        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
+        // Courses height
+        $name = 'theme_boost_union/courseboxheight';
+        $title = get_string('courseboxheight', 'theme_boost_union');
+        $description = get_string('courseboxheight_desc', 'theme_boost_union');;
+        $default = '250px';
+        $choices = array(
+                '200px' => '200px',
+                '225px' => '225px',
+                '250px' => '250px',
+                '275px' => '275px',
+                '300px' => '300px',
+                '325px' => '325px',
+                '350px' => '350px',
+                '375px' => '375px',
+                '400px' => '400px',
+                );
+        $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
         //End DBN Update
 
         // Add tab to settings page.

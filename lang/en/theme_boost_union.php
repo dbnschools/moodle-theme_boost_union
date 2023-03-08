@@ -682,4 +682,24 @@ $string['showcoursemanagement_desc'] = 'Course Management is a collection of mos
 $string['createinfo'] = 'Special Course Creator Button';
 $string['createinfodesc'] = 'This button appears on the homepage when a user can create new courses.  Those with the role of Course Creator at the site level will see this button.';
 $string['naviconbuttoncreatetextdefault'] = 'Create a Course';
+// Course Styles
+$string['coursestyle1'] = 'Tile Style One';
+$string['coursestyle2'] = 'Tile Style Two';
+$string['coursestyle3'] = 'Tile Style Three';
+$string['coursestyle4'] = 'Tile Style Four w/course summary';
+$string['coursestyle5'] = 'Horizontal Style One';
+$string['coursestyle6'] = 'Horizontal Image Background Full Details';
+$string['coursestyle7'] = 'Horizontal Image Background Title & Teacher Only';
+$string['coursestyle8'] = 'Horizontal Two Column';
+$string['coursestyle9'] = 'Corporate Training - minimal with completion progressbar';
+$string['coursestyle10'] = 'Default Moodle Course Display';
+$string['coursetilestyle'] = 'Course Tile Display';
+$string['coursetilestyle_desc'] = 'When viewing course categories you can choose from the following styles to display courses on the home page and course category areas.';
+$string['trimtitle'] = 'Trim Course Title';
+$string['trimtitle_desc'] = 'Enter a number to trim the title length.  This number represents characters that will be displayed.';
+$string['trimsummary'] = 'Trim Course Summary';
+$string['trimsummary_desc'] = 'Enter a number to trim the summary length.  This number represents characters that will be displayed.';
+$string['courseboxheight'] = 'Course Tile Height';
+$string['courseboxheight_desc'] = 'Control the height of the Course tile on the frontpage and course categories.';
+$string['enrollcoursecard'] = 'View Course';
 // End DBN Update.
