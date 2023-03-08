@@ -176,11 +176,9 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $coursestyle5 = get_string('coursestyle5', 'theme_boost_union');
         $coursestyle6 = get_string('coursestyle6', 'theme_boost_union');
         $coursestyle7 = get_string('coursestyle7', 'theme_boost_union');
-        $coursestyle8 = get_string('coursestyle8', 'theme_boost_union');
-        $coursestyle9 = get_string('coursestyle9', 'theme_boost_union');
-        $coursestyle10 = get_string('coursestyle10', 'theme_boost_union');
+        $coursestyle10 = get_string('coursestyle8', 'theme_boost_union');
         $default = '10';
-        $choices = array('1'=>$coursestyle1, '2'=>$coursestyle2, '3'=>$coursestyle3, '4'=>$coursestyle4, '5'=>$coursestyle5, '6'=>$coursestyle6, '7'=>$coursestyle7, '8'=>$coursestyle8, '9'=>$coursestyle9, '10'=>$coursestyle10);
+        $choices = array('1'=>$coursestyle1, '2'=>$coursestyle2, '3'=>$coursestyle3, '4'=>$coursestyle4, '5'=>$coursestyle5, '6'=>$coursestyle6, '7'=>$coursestyle7,'8'=>$coursestyle10);
         $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);

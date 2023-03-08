@@ -519,4 +519,5 @@ function theme_boost_union_course_trim_char($str, $n = 500, $endchar = '&#8230;'
     $out = $small.$endchar;
     return $out;
 }
+
 //End DBN change
