@@ -110,6 +110,15 @@ $string['activityiconcolorcontentsetting_desc'] = 'The activity icon color for "
 // ... ... Setting: Activity icon color for 'Interface'.
 $string['activityiconcolorinterfacesetting'] = 'Activity icon color for "Interface"';
 $string['activityiconcolorinterfacesetting_desc'] = 'The activity icon color for "Interface"';
+// ... Section: Navbar.
+$string['navbarheading'] = 'Navbar';
+// ... ... Setting: Navbar color.
+$string['navbarcolorsetting'] = 'Navbar color';
+$string['navbarcolorsetting_desc'] = 'With this setting, you can change the navbar color from the default light navbar to a dark one or a colored one.';
+$string['navbarcolorsetting_light'] = 'Light navbar with dark font color (unchanged as presented by Moodle core)';
+$string['navbarcolorsetting_dark'] = 'Dark navbar with light font color';
+$string['navbarcolorsetting_primarydark'] = 'Primary color navbar with light font color';
+$string['navbarcolorsetting_primarylight'] = 'Primary color navbar with dark font color';
 
 // Settings: Login page tab.
 $string['loginpagetab'] = 'Login page';
@@ -597,7 +606,6 @@ $string['upgradenotice_2022080922_logo'] = 'logo';
 $string['upgradenotice_2022080922_logocompact'] = 'compact logo';
 $string['upgradenotice_2022080922_copied'] = 'The existing <strong>{$a}</strong> from the Moodle core settings has been copied to the Boost Union {$a} setting during this upgrade. Please double-check the result.';
 $string['upgradenotice_2022080922_notcopied'] = 'The <strong>{$a}</strong> setting within Boost Union is empty now. If you want to use a {$a} within Boost Union from now on, just upload it into the Boost Union {$a} setting later.';
-
 
 // Begin DBN Update.
 $string['showprogressbar'] = 'Show Course Progress Bar';

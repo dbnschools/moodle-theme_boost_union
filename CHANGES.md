@@ -4,6 +4,19 @@ moodle-theme_boost_union
 Changes
 -------
 
+### v4.1-r4
+
+* 2023-03-06 - Bugfix: Align the search bar with the dark navbar look, solves #234.
+* 2023-03-06 - Bugfix: Fix hover background color on dark navbars, solves #236.
+* 2023-03-06 - Bugfix: Fix edit switch color on dark navbars, solves #235.
+
+### v4.1-r3
+
+* 2023-03-05 - Release: Add lern.link GmbH and bdecent GmbH to the list of maintainers in README.md.
+* 2023-03-05 - Bugfix: Improve card header and footer of advertisement tiles with background images, solves #232.
+* 2023-03-01 - Tests: Updated Moodle Plugin CI to use PHP 8.1 and Postgres 13 from Moodle 4.1 on.
+* 2023-02-12 - Feature: Allow admin to change the navbar color, solves #39, helps to resolve #110.
+
 ### v4.1-r2
 
 * 2023-02-12 - Feature: Enable admins to upload css code for mod_h5p and mod_hvp, solves #166 #207.

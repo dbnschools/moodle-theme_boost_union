@@ -81,6 +81,11 @@ define('THEME_BOOST_UNION_SETTING_LOGINFORMPOS_CENTER', 'center');
 define('THEME_BOOST_UNION_SETTING_LOGINFORMPOS_LEFT', 'left');
 define('THEME_BOOST_UNION_SETTING_LOGINFORMPOS_RIGHT', 'right');
 
+define('THEME_BOOST_UNION_SETTING_NAVBARCOLOR_LIGHT', 'light');
+define('THEME_BOOST_UNION_SETTING_NAVBARCOLOR_DARK', 'dark');
+define('THEME_BOOST_UNION_SETTING_NAVBARCOLOR_PRIMARYLIGHT', 'primarylight');
+define('THEME_BOOST_UNION_SETTING_NAVBARCOLOR_PRIMARYDARK', 'primarydark');
+
 /**
  * Returns the main SCSS content.
  *
@@ -103,7 +108,7 @@ function theme_boost_union_get_main_scss_content($theme) {
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/preset/default.scss');
     }
 
-    // Begin DBN Update.
+     // Begin DBN Update.
     if ($theme->settings->sectionstyle == 1) {
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost_union/scss/sections/sections-boost_union.scss');
     }

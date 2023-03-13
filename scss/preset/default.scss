@@ -89,6 +89,7 @@ $courseboxheight:                  200px !default;
 $nav-tabs-link-active-bg:           rgba($primary, 10%) !default;
 // End DBN Update.
 
+
 // Custom control size
 $custom-control-indicator-size: 1.25rem;
 
@@ -101,7 +102,7 @@ $dropdown-link-hover-bg: $primary;
 
 $popover-max-width: 300px !default;
 
-$border-radius: .25rem !default;
+$border-radius: .5rem !default;
 $border-radius-lg: .6rem !default;
 
 // stylelint-disable
@@ -170,13 +171,12 @@ body {
 
 @include bg-variant(".bg-gray", $gray-200, true);
 
-
 // Begin DBN Update.
 
 // Navbar customizations
 .navbar.fixed-top {
     background-color: $navbar-bg!important;
-    box-shadow: 0 0 9px 0 rgba(0,0,0,.6)!important;
+    box-shadow: 0 0 15px 0 rgba(0,0,0,.3)!important;
 }
 .navbar-light .navbar-nav .nav-link {
     color: $navbar-link;
