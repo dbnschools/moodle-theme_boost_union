@@ -47,9 +47,20 @@ $rfs-base-font-size: 0.9rem !default;
 $headings-font-weight:   700 !default;
 
 // Navbar
-$navbar-dark-hover-color:           rgba($white, 1) !default;
-$navbar-light-color:                rgba($black, 0.6) !default;
-$navbar-light-hover-color:          rgba($black, .9) !default;
+$navbar-dark-color:                 rgba($white, .5) !default;
+$navbar-dark-hover-color:           rgba($white, .75) !default;
+$navbar-dark-active-color:          $white !default;
+$navbar-dark-disabled-color:        rgba($white, .25) !default;
+$navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$navbar-dark-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
+$navbar-dark-toggler-border-color:  rgba($white, .1) !default;
+
+$navbar-light-color:                rgba($black, .5) !default;
+$navbar-light-hover-color:          rgba($black, .7) !default;
+$navbar-light-active-color:         rgba($black, .9) !default;
+$navbar-light-disabled-color:       rgba($black, .3) !default;
+$navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$navbar-light-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
+$navbar-light-toggler-border-color: rgba($black, .1) !default;
+
 
 // Breadcrumbs
 $breadcrumb-padding-y:              .5rem !default;
@@ -73,15 +84,6 @@ $toast-header-background-color:     rgba($white, .1) !default;
 
 // Begin DBN Update.
 $drawer-bg:                        #f5f9fd !default;
-$navbar-dark-color:                rgba($black, 1) !default;
-$navbar-dark-hover-color:          rgba($white, 0.5) !default;
-$navbar-light-color:               rgba($white, 1) !default;
-$navbar-light-hover-color:         rgba($black, 0.5) !default;
-$navbar-bg:                        $white !default;
-$navbar-link:                      $black !default;
-$navbar-link-hover:                $black !default;
-$navbarsitetitlecolor:             $black !default;
-$courseheaderbg:                   #ffffff !default;
 $pagenavbuttonsbg:                 #aabbcd !default;
 $body-bg:                          #f5f9fd !default;
 $courseboxheight:                  200px !default;
@@ -102,7 +104,7 @@ $dropdown-link-hover-bg: $primary;
 
 $popover-max-width: 300px !default;
 
-$border-radius: .5rem !default;
+$border-radius: .15rem !default;
 $border-radius-lg: .6rem !default;
 
 // stylelint-disable
@@ -175,54 +177,11 @@ body {
 
 // Navbar customizations
 .navbar.fixed-top {
-    background-color: $navbar-bg!important;
     box-shadow: 0 0 15px 0 rgba(0,0,0,.3)!important;
 }
-.navbar-light .navbar-nav .nav-link {
-    color: $navbar-link;
-}
-.navbar-light .navbar-toggler {
-    color: $navbar-link;
-}
-.navbar.fixed-top #usernavigation .nav-link {
-    color: $navbar-link;
-}
-.userinitials {
-    background-color: $pagenavbuttonsbg;
-}
-#usernavigation .usermenu .dropdown-toggle::after, span.login a {
-    color: $navbar-link;
-}
-.primary-navigation .moremenu .nav-link:hover, .primary-navigation  .moremenu .nav-link:focus, .primary-navigation .moremenu .nav-link.active:focus, .primary-navigation .moremenu .nav-link.active:hover, .primary-navigation .moremenu .nav-link.active {
-    background-color: lighten($navbar-bg, 4%);
-    border-bottom-color: darken($navbar-bg, 15%);
-}
-//Rollover and hover
-.navbar-light .navbar-nav .show>.nav-link, .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .nav-link.active {
-    color: $navbar-link-hover;
-}
-.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus {
-    color: $navbar-link-hover;
-}
-.navbar-light .navbar-brand {
-    color: $navbarsitetitlecolor;
-}
-.navbar-light .navbar-brand:hover, .navbar-light .navbar-brand:focus {
-    color: $navbar-link-hover;
-}
-
-// Edit button.
-form.editmode-switch-form {
-    color: $navbar-link!important;
-}
-.editmode-switch-form .text-primary {
-    color: $navbar-link!important;
-}
 .custom-control-input:checked~.custom-control-label::before {
-    background-color: $primary;
+    background-color: $teal;
 }
-
-
 
 // Page elements.
 .drawer {
@@ -270,6 +229,9 @@ form.editmode-switch-form {
     #page.drawers .main-inner {
         padding: .75rem;
     }
+    .dashtitle {
+        margin-top: 1rem;
+    }
 }
 div#blockslider {
     padding: 1rem;
@@ -283,17 +245,9 @@ div#blockslider {
     margin-bottom: 0!important;
     position: relative;
 }
-header#page-header {
-    background-color: $courseheaderbg;
-    //border-radius: $border-radius $border-radius 0 0;
-    padding-top: 1rem;
-}
 .secondary-navigation {
     border-radius: 0 0 $border-radius $border-radius;
     margin-bottom: 0;
-}
-div#page-content:not(#page-login-index div#page-content, #page-mod-quiz-attempt div#page-content) {
-    background: linear-gradient($courseheaderbg 0px, rgba($courseheaderbg,0.75) 75px, rgba($courseheaderbg,0) 300px);
 }
 .path-mod .activity-header:not(:empty) {
     background-color: $white;
@@ -334,7 +288,6 @@ div#page-content:not(#page-login-index div#page-content, #page-mod-quiz-attempt 
     max-width: $course-content-maxwidth;
     margin-left: auto;
     margin-right: auto;
-    background-color: $courseheaderbg;
 }
 .format-site .secondary-navigation {
     max-width: 100%;
@@ -364,8 +317,8 @@ div#page-content:not(#page-login-index div#page-content, #page-mod-quiz-attempt 
     }
 }
 .headerbuttons .btn-secondary {
-    background-color: $courseheaderbg;
-    border-color: darken($courseheaderbg, 1%);
+    background-color: $white;
+    border-color: darken($white, 1%);
 }
 header#page-header .progress {
     background-color: #a1d5e1;
@@ -432,7 +385,9 @@ header#page-header .progress {
     //border-radius: $border-radius;
 }
 
-
+.fpstart {
+    margin-bottom: 1rem;
+}
 
 .drawer-toggles .drawer-toggler .btn, .btn-footer-popover, button#back-to-top {
     background-color: $pagenavbuttonsbg!important;
@@ -488,9 +443,9 @@ div#fpslider {
     background-color: $white;
 }
 
-.navbar-light .navbar-toggler-icon {
+/*.navbar-light .navbar-toggler-icon {
     filter: brightness(0.0) saturate(0);
-}
+}*/
 
 .courseindex .courseindex-section {
     border-left: solid 3px transparent;
@@ -864,6 +819,18 @@ ul.teacherscourseview {
     transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
     background-color: $gray-200;
 }
+
+.drawer-inpage .block {
+    background-color: $body-bg;
+}
+@media (max-width: 768px) {
+    .col-md-3.drawer-inpage {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-top: 1rem;
+    }
+}
+
 /*
 .easyenrolform {
     display: flex;

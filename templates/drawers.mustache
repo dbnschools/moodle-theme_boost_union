@@ -69,6 +69,8 @@
     {{{ output.standard_top_of_body_html }}}
 
     {{> theme_boost_union/navbar }}
+    {{! Begin DBN Update }}
+    {{#showcourseindexnav}}
     {{#courseindex}}
         {{< theme_boost/drawer }}
             {{$id}}theme_boost-drawers-courseindex{{/id}}
@@ -100,8 +102,12 @@
             {{$closebuttontext}}{{#str}}closeblockdrawer, core{{/str}}{{/closebuttontext}}
         {{/ theme_boost/drawer}}
     {{/hasblocks}}
-    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers {{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}} drag-container">
+    {{/showcourseindexnav}}
+    {{! End DBN Update }}
+    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers {{! Begin DBN Update }} {{#showcourseindexnav}}{{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}}{{/showcourseindexnav}}{{! End DBN Update }} drag-container">
         <div id="topofscroll" class="main-inner">
+        {{! Begin DBN Update }}
+        {{#showcourseindexnav}}
             <div class="drawer-toggles d-flex">
                 {{#courseindex}}
                     <div class="drawer-toggler drawer-left-toggle open-nav d-print-none">
@@ -137,6 +143,8 @@
                     </div>
                 {{/hasblocks}}
             </div>
+            {{/showcourseindexnav}}
+            {{! End DBN Update }}
             {{> theme_boost_union/javascriptdisabledhint }}
             {{> theme_boost_union/infobanners }}
             {{{ output.full_header }}}
@@ -171,8 +179,32 @@
                                 </div>
                             </div>
                         {{/overflow}}
+                        {{! Begin DBN Update }}
+                        {{^showcourseindexnav}}
+                        <div class="container-fluid">
+                          <div class="row">
+                            <div class="col">
+                              {{{ output.main_content }}}
+                            </div>
+                            {{#hasblocks}}
+                            <div class="col-md-3 drawer-inpage">
+                                {{{ addblockbutton }}}
+                                {{{ sidepreblocks }}}
+                            </div>
+                            {{/hasblocks}}
+                          </div>
+                        </div>
+                        {{/showcourseindexnav}}
+                        {{! End DBN Update }}
+
                         {{{courserelatedhints}}}
+                        
+                        {{! Begin DBN Update }}
+                        {{#showcourseindexnav}}
                         {{{ output.main_content }}}
+                        {{/showcourseindexnav}}
+                        {{! End DBN Update }}
+
                         {{{ output.activity_navigation }}}
                         {{{ output.course_content_footer }}}
 
@@ -188,7 +220,6 @@
     </div>
     {{{ output.standard_after_main_region_html }}}
 </div>
-
 </body>
 </html>
 {{#js}}
@@ -198,3 +229,4 @@ require(['theme_boost/loader', 'theme_boost/drawer'], function(Loader, Drawer) {
     M.util.js_complete('theme_boost/loader');
 });
 {{/js}}
+

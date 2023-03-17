@@ -109,6 +109,9 @@ $regionmainsettingsmenu = $buildregionmainsettings ? $OUTPUT->region_main_settin
 $header = $PAGE->activityheader;
 $headercontent = $header->export_for_template($renderer);
 
+// DBN Update begin
+$showcourseindexnav = (empty($this->page->theme->settings->showcourseindexnav)) ? false : $this->page->theme->settings->showcourseindexnav;
+// DBN Update end
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
@@ -128,7 +131,10 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'overflow' => $overflow,
     'headercontent' => $headercontent,
-    'addblockbutton' => $addblockbutton
+    'addblockbutton' => $addblockbutton,
+    // DBN Update begin
+    'showcourseindexnav' => $showcourseindexnav
+    // DBN Update end
 ];
 
 // Include the template content for the course related hints.

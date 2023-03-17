@@ -407,33 +407,6 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
 
         //Begin DBN Update
         // We use an empty default value because the default colour should come from the preset .
-        $name = 'theme_boost_union/navbarbg';
-        $title = get_string('navbarbg', 'theme_boost_union');
-        $description = get_string('navbarbg_desc', 'theme_boost_union');
-        $setting = new admin_setting_configcolourpicker($name, $title, $description, '');
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/navbarlink';
-        $title = get_string('navbarlink', 'theme_boost_union');
-        $description = get_string('navbarlink_desc', 'theme_boost_union');
-        $setting = new admin_setting_configcolourpicker($name, $title, $description, '');
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/navbarlinkhover';
-        $title = get_string('navbarlink-hover', 'theme_boost_union');
-        $description = get_string('navbarlink_desc', 'theme_boost_union');
-        $setting = new admin_setting_configcolourpicker($name, $title, $description, '');
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/navbarsitetitlecolor';
-        $title = get_string('navbarsitetitlecolor', 'theme_boost_union');
-        $description = get_string('navbarsitetitlecolor_desc', 'theme_boost_union');
-        $setting = new admin_setting_configcolourpicker($name, $title, $description, '');
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
 
         $name = 'theme_boost_union/pagenavbuttonsbg';
         $title = get_string('pagenavbuttonsbg', 'theme_boost_union');
@@ -445,13 +418,6 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
         $name = 'theme_boost_union/drawerbg';
         $title = get_string('drawerbg', 'theme_boost_union');
         $description = get_string('drawerbg_desc', 'theme_boost_union');
-        $setting = new admin_setting_configcolourpicker($name, $title, $description, '');
-        $setting->set_updatedcallback('theme_reset_all_caches');
-        $tab->add($setting);
-
-        $name = 'theme_boost_union/courseheaderbg';
-        $title = get_string('courseheaderbg', 'theme_boost_union');
-        $description = get_string('courseheaderbg_desc', 'theme_boost_union');
         $setting = new admin_setting_configcolourpicker($name, $title, $description, '');
         $setting->set_updatedcallback('theme_reset_all_caches');
         $tab->add($setting);
@@ -739,6 +705,15 @@ if ($hassiteconfig || has_capability('theme/boost_union:configure', context_syst
                 THEME_BOOST_UNION_SETTING_SELECT_YES);
         
         // Begin DBN Update.
+        // Show/hide course index navigation.
+        $name = 'theme_boost_union/showcourseindexnav';
+        $title = get_string('showcourseindexnav', 'theme_boost_union');
+        $description = get_string('showcourseindexnav_desc', 'theme_boost_union');
+        $default = '';
+        $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $tab->add($setting);
+
         // Show hide course management panel.
         $name = 'theme_boost_union/showcoursemanagement';
         $title = get_string('showcoursemanagement', 'theme_boost_union');
