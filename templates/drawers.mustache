@@ -179,6 +179,9 @@
                                 </div>
                             </div>
                         {{/overflow}}
+
+                        {{{courserelatedhints}}}
+
                         {{! Begin DBN Update }}
                         {{^showcourseindexnav}}
                         <div class="container-fluid">
@@ -195,11 +198,6 @@
                           </div>
                         </div>
                         {{/showcourseindexnav}}
-                        {{! End DBN Update }}
-
-                        {{{courserelatedhints}}}
-                        
-                        {{! Begin DBN Update }}
                         {{#showcourseindexnav}}
                         {{{ output.main_content }}}
                         {{/showcourseindexnav}}

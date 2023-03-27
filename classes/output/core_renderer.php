@@ -348,8 +348,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $mycourses = get_string('latestcourses', 'theme_boost_union');
         $mycoursesurl = new moodle_url('/my/');
         $mycoursesmenu = $this->boost_union_mycourses();
-        $hasmycourses = $this->page->pagelayout == 'course' && (isset($this->page->theme->settings->showlatestcourses) && $this->page->theme->settings->showlatestcourses == 1);
-        $hascourseactivities = $this->page->pagelayout == 'course' && (isset($this->page->theme->settings->showcourseactivities) && $this->page->theme->settings->showcourseactivities == 1);
+        $hasmycourses = isset($COURSE->id) && $COURSE->id > 1 && (isset($this->page->theme->settings->showlatestcourses) && $this->page->theme->settings->showlatestcourses == 1);
+        $hascourseactivities = isset($COURSE->id) && $COURSE->id > 1 && (isset($this->page->theme->settings->showcourseactivities) && $this->page->theme->settings->showcourseactivities == 1);
         $courseactivitiesbtntext = get_string('courseactivitiesbtntext', 'theme_boost_union');
         $courseenrollmentcode = get_string('courseenrollmentcode', 'theme_boost_union');
         $fpicons = $this->fpicons();
