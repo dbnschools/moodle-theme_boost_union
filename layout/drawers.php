@@ -30,6 +30,7 @@
  * * Include Jvascript disabled hint
  * * Include advertisement tiles
  * * Include info banners
+ * * Include additional block regions
  *
  * @package   theme_boost_union
  * @copyright 2022 Luca Bösch, BFH Bern University of Applied Sciences luca.boesch@bfh.ch
@@ -109,9 +110,6 @@ $regionmainsettingsmenu = $buildregionmainsettings ? $OUTPUT->region_main_settin
 $header = $PAGE->activityheader;
 $headercontent = $header->export_for_template($renderer);
 
-// DBN Update begin
-$showcourseindexnav = (empty($this->page->theme->settings->showcourseindexnav)) ? false : $this->page->theme->settings->showcourseindexnav;
-// DBN Update end
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
@@ -131,14 +129,14 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'overflow' => $overflow,
     'headercontent' => $headercontent,
-    'addblockbutton' => $addblockbutton,
-    // DBN Update begin
-    'showcourseindexnav' => $showcourseindexnav
-    // DBN Update end
+    'addblockbutton' => $addblockbutton
 ];
 
 // Include the template content for the course related hints.
 require_once(__DIR__ . '/includes/courserelatedhints.php');
+
+// Include the template content for the block regions.
+require_once(__DIR__ . '/includes/blockregions.php');
 
 // Include the content for the back to top button.
 require_once(__DIR__ . '/includes/backtotopbutton.php');

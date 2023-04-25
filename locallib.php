@@ -1282,8 +1282,8 @@ function theme_boost_union_get_course_header_image_url() {
             $file->get_itemid(), $file->get_filepath(), $file->get_filename());
     }
 
-     // Begin DBN Update.
-     elseif ($hasheaderbg) {
+    // Begin DBN Update.
+    elseif ($hasheaderbg) {
         return $PAGE->theme->image_url('noimg', 'theme')->out();
     }
     // End DBN Update.
@@ -1320,7 +1320,52 @@ function theme_boost_union_set_mobilecss_url() {
     }
 }
 
+/**
+ * Returns an array of the defined additional block regions.
+ *
+ * @param array $pageregions List of page regions.
+ * @return array $regions
+ */
+function theme_boost_union_get_additional_regions($pageregions=[]) {
+    $regions = [
+            'footerleft' => 'footer-left',
+            'footerright' => 'footer-right',
+            'footercenter' => 'footer-center',
+            'offcanvasleft' => 'offcanvas-left',
+            'offcanvasright' => 'offcanvas-right',
+            'offcanvascenter' => 'offcanvas-center',
+            'outsideleft' => 'outside-left',
+            'outsideright' => 'outside-right',
+            'outsidetop' => 'outside-top',
+            'outsidebottom' => 'outside-bottom',
+            'contentupper' => 'content-upper',
+            'contentlower' => 'content-lower',
+            'header' => 'header'
+    ];
 
+    return ($pageregions) ? array_intersect($regions, $pageregions) : $regions;
+}
+
+/**
+ * Get the defined regions for the page layout.
+ *
+ * @param string $layout Pagelayout name.
+ * @return array $regions
+ */
+function theme_boost_union_get_block_regions($layout) {
+
+    // Get the admin setting for the layout.
+    $regionsettings = get_config('theme_boost_union', 'blockregionsfor'.$layout);
+
+    // Explode the admin setting to get the block regions.
+    $settings = !empty($regionsettings) ? explode(',', $regionsettings) : [];
+
+    // Add the configured regions to the side-pre region (which is always provided by Boost core).
+    $regions = array_merge(['side-pre'], $settings);
+
+    // Return.
+    return $regions;
+}
 // Begin DBN Update.
 function theme_boost_union_get_course_activities() {
     GLOBAL $CFG, $PAGE, $OUTPUT;

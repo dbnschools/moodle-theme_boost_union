@@ -47,20 +47,9 @@ $rfs-base-font-size: 0.9rem !default;
 $headings-font-weight:   700 !default;
 
 // Navbar
-$navbar-dark-color:                 rgba($white, .5) !default;
-$navbar-dark-hover-color:           rgba($white, .75) !default;
-$navbar-dark-active-color:          $white !default;
-$navbar-dark-disabled-color:        rgba($white, .25) !default;
-$navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$navbar-dark-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
-$navbar-dark-toggler-border-color:  rgba($white, .1) !default;
-
-$navbar-light-color:                rgba($black, .5) !default;
-$navbar-light-hover-color:          rgba($black, .7) !default;
-$navbar-light-active-color:         rgba($black, .9) !default;
-$navbar-light-disabled-color:       rgba($black, .3) !default;
-$navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$navbar-light-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
-$navbar-light-toggler-border-color: rgba($black, .1) !default;
-
+$navbar-dark-hover-color:           rgba($white, 1) !default;
+$navbar-light-color:                rgba($black, 0.6) !default;
+$navbar-light-hover-color:          rgba($black, .9) !default;
 
 // Breadcrumbs
 $breadcrumb-padding-y:              .5rem !default;
@@ -87,10 +76,8 @@ $drawer-bg:                        #f5f9fd !default;
 $pagenavbuttonsbg:                 #aabbcd !default;
 $body-bg:                          #f5f9fd !default;
 $courseboxheight:                  200px !default;
-
 $nav-tabs-link-active-bg:           rgba($primary, 10%) !default;
 // End DBN Update.
-
 
 // Custom control size
 $custom-control-indicator-size: 1.25rem;
@@ -104,7 +91,7 @@ $dropdown-link-hover-bg: $primary;
 
 $popover-max-width: 300px !default;
 
-$border-radius: .15rem !default;
+$border-radius: .5rem !default;
 $border-radius-lg: .6rem !default;
 
 // stylelint-disable
@@ -172,6 +159,7 @@ body {
 }
 
 @include bg-variant(".bg-gray", $gray-200, true);
+
 
 // Begin DBN Update.
 
@@ -322,6 +310,13 @@ div#blockslider {
 }
 header#page-header .progress {
     background-color: #a1d5e1;
+}
+.header-action.ml-2 {
+    display: inline-flex;
+    background-color: #fff;
+}
+.courseheaderimage-dark {
+    text-shadow: none!important; 
 }
 /*.iconsidebar .list-group-item, .list-group-item:last-child {
     border: 0;
